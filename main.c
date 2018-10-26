@@ -16,7 +16,7 @@ int main()
     Matrix gg = Matrix_sztringbol("1,1,2,2,1,-1;4,4,8,9,1,-7;2,5,13,1,26,10;1,3,8,2,11,1;2,1,1,2,3,3;");
     //Matrix_sorcsere_helyben(&a, 0, 1);
     //Matrix_oszlopcsere_helyben(&a, 0, 1);
-
+    ////////////////////////////////////////////////
     //Matrix_kiir(Matrix_szorzas(k, a));
     Matrix_kiir(gg);
     Matrix_kiir_Octave(gg);
