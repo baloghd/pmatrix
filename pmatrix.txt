@@ -1,1 +1,0 @@
-./Release/Matrix_muvelet.c.o ./Release/Matrix_IO.c.o ./Release/main.c.o ./Release/Matrix.c.o
