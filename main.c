@@ -7,18 +7,6 @@
 #include "Matrix_IO.h"
 #include "Matrix_muvelet.h"
 
-int match(const char *s, const char *p, int overlap)
-{
-        int c = 0, l = strlen(p);
-
-        while (*s != '\0') {
-                if (strncmp(s++, p, l)) continue;
-                if (!overlap) s += l - 1;
-                c++;
-        }
-        return c;
-}
-
 int main()
 {
     //Matrix m = Matrix_identitas(3);

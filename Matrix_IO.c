@@ -33,6 +33,18 @@ void Matrix_kiir_Octave(Matrix m)
     printf("]\n");
 }
 
+int match(const char *s, const char *p, int overlap)
+{
+        int c = 0, l = strlen(p);
+
+        while (*s != '\0') {
+                if (strncmp(s++, p, l)) continue;
+                if (!overlap) s += l - 1;
+                c++;
+        }
+        return c;
+}
+
 Matrix Matrix_sztringbol(char *sz)
 {
     //standard elvalasztok:
