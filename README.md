@@ -13,9 +13,8 @@ A modularitást szem előtt tartva pmatrix több fejlécből épül fel. Ezek:
     - pl. a 2x2-es identitásmátrix = [1, 0; 0,1]
 - *Matrix_muveletek.h*: a Matrixokon végrehajtható műveleteket tárolja
   - ezek is modulárisan épülnek fel, tehát pl. a Gauss-elimináció segédfüggvényeket használ a sorok cseréjére vagy szorzására (ezek önmagukban is használhatóak, ha az alkalmazás megkívánja)
-  - lineáris függetlenség meghatározása
+  - alapműveletek mátrixokkal, transzponálás, invertálás
   - Gauss-elimináció
-  - invertálás
   - rang
   - megfelelő méretű mátrixoknál determináns számítása
   
