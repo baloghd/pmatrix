@@ -3,9 +3,20 @@
 #include <assert.h>
 
 #include "Matrix.h"
+#include "Matrix_IO.h"
 #include "Matrix_muvelet.h"
 
-void sorszoroz(double *sor, int meret, double mivel)
+double *sorszoroz(double *sor, int meret, double mivel)
+{
+    double *vissza = (double *) malloc(meret * sizeof(double));
+    for (int i = 0; i < meret; ++i)
+    {
+        vissza[i] *= mivel;
+    }
+    return vissza;
+}
+
+void sorszoroz_helyben(double *sor, int meret, double mivel)
 {
     for (int i = 0; i < meret; ++i)
     {
@@ -13,7 +24,17 @@ void sorszoroz(double *sor, int meret, double mivel)
     }
 }
 
-void sorosszead(double *sor1, double *sor2, int meret)
+double *sorosszead(double *sor1, double *sor2, int meret)
+{
+    double *vissza = (double *) malloc(meret * sizeof(double));
+    for (int i = 0; i < meret; ++i)
+    {
+        vissza[i] = sor1[i] + sor2[i];
+    }
+    return vissza;
+}
+
+void sorosszead_helyben(double *sor1, double *sor2, int meret)
 {
     for (int i = 0; i < meret; ++i)
     {
@@ -40,8 +61,8 @@ void Matrix_oszlopcsere_helyben(Matrix *m, int egyikoszlop, int masikoszlop)
 
 Matrix Matrix_osszead(Matrix m1, Matrix m2)
 {
-    assert(((m1.sor == m2.sor) && (m2.oszlop == m2.oszlop)) &&
-                "HIBA: csak azonos meretu Matrixok adhatoak ossze.");
+    assert(((m1.sor == m2.sor) && (m2.oszlop == m2.oszlop)) && "HIBA: csak azonos meretu Matrixok adhatoak ossze.");
+    
     Matrix t = Matrix_inic(m1.sor, m1.oszlop);
 
     for (int i = 0; i < m1.sor; ++i)
@@ -58,6 +79,7 @@ Matrix Matrix_osszead(Matrix m1, Matrix m2)
 Matrix Matrix_szorzas(Matrix jobb, Matrix bal)
 {
     assert(((jobb.sor == bal.oszlop) && (jobb.oszlop == bal.sor)) && "HIBA: szorzando Matrixok dimenzioira igaznak kell lennie, hogy [i x j] * [j x i]");
+    
     Matrix szorzat = Matrix_inic(jobb.sor, bal.oszlop);
     for (int i = 0; i < jobb.sor; ++i)
     {
@@ -75,47 +97,55 @@ Matrix Matrix_szorzas(Matrix jobb, Matrix bal)
     return szorzat;
 }
 
-
-
-void Matrix_Gauss(Matrix m)
+void Matrix_Gauss(Matrix *m)
 {
-    for (int i = 0; i < m.sor; ++i)
+    int k = m->sor;
+    int n = m->oszlop;
+    
+    for (int i = 0; i < k; ++i)
     {
-        double generalo = m.tomb[i][i];
-        if (generalo == 0)
+        sorszoroz_helyben(m->tomb[i], n, 1/m->tomb[i][i]);
+        printf("sorszoroz:\n");
+        Matrix_kiir(*m);
+        for (int t = 1; t < k; ++t)
         {
-            int nullassorindex = 0;
-            for (int j = 0; j < m.sor; ++j)
+            double *bontosor = sorszoroz(m->tomb[i], n, -m->tomb[t][i]);
+            sorosszead_helyben(m->tomb[t], bontosor, n);
+            Matrix_kiir(*m);
+        }
+    }
+
+}
+
+/*
+for (int i = 0; i < m->sor; ++i)
+    {
+        double generalo = m->tomb[i][i];
+        int legnagyobb = i;
+        for (int j = i + 1; j < n; ++j)
+        {
+            if (m->tomb[j][i] > generalo)
             {
-                if (m.tomb[j][i] == 0)
+                generalo = m->tomb[j][i];
+                legnagyobb = i;
+            }
+        }
+        
+        Matrix_sorcsere_helyben(m, i, legnagyobb);
+        
+        for (int k = i + 1; k < n; ++k)
+        {
+            double c = -m->tomb[k][i]/m->tomb[i][i];
+            for (int l = i; l < n + 1; l++)
+            {
+                if (i == l)
                 {
-                    nullassorindex = j;
-                    break;
+                    m->tomb[k][l] = 0;
+                }
+                else 
+                {
+                    m->tomb[k][l] += c * m->tomb[i][l];
                 }
             }
-            printf("csereljuk a %d. sort %d.-re\n", m.sor-1, nullassorindex);
-            Matrix_sorcsere_helyben(&m, m.sor-1, nullassorindex);
-            generalo = m.tomb[i][i];
         }
-        Matrix_kiir(m);
-        printf("vezeregyes az %d. sorban, generalo = %d!\n", i + 1, generalo);
-        sorszoroz(m.tomb[i], m.oszlop, -1/generalo);
-        
-        
-        double nullazando;
-        for (int j = i + 1; j < m.sor; ++j)
-        {
-            nullazando = m.tomb[j][i];
-            printf("a nullazando: %lf \n", nullazando);
-            if (nullazando > 1)
-            {
-                sorszoroz(m.tomb[i], m.oszlop, nullazando);
-            }
-            sorosszead(m.tomb[j], m.tomb[i], m.oszlop);
-            sorszoroz(m.tomb[i], m.oszlop, 1/nullazando);
-            
-            Matrix_kiir(m);
-        }
-        sorszoroz(m.tomb[i], m.oszlop, -1);
-    }
-}
+    }*/

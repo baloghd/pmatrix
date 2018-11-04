@@ -17,5 +17,5 @@ Matrix Matrix_sztringbol_strtok(char *sz);
 
 Matrix Matrix_fajlbol(FILE *fp);
 
-#endif MATRIX_IO
+#endif
 
