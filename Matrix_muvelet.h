@@ -11,6 +11,8 @@ double *sorosszead(double *sor1, double *sor2, int meret);
 
 void sorosszead_helyben(double *sor1, double *sor2, int meret);
 
+int _van_meg_nemnulla_sor(Matrix m, int kezdosor);
+
 void Matrix_sorcsere_helyben(Matrix *m, int egyiksor, int masiksor);
 
 void Matrix_oszlopcsere_helyben(Matrix *m, int egyikoszlop, int masikoszlop);

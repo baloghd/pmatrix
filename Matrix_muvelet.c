@@ -11,7 +11,7 @@ double *sorszoroz(double *sor, int meret, double mivel)
     double *vissza = (double *) malloc(meret * sizeof(double));
     for (int i = 0; i < meret; ++i)
     {
-        vissza[i] *= mivel;
+        vissza[i] = sor[i] * mivel;
     }
     return vissza;
 }
@@ -97,25 +97,95 @@ Matrix Matrix_szorzas(Matrix jobb, Matrix bal)
     return szorzat;
 }
 
+int _van_meg_nemnulla_sor(Matrix m, int kezdosor)
+{
+    for (int i = kezdosor + 1; i < m.sor; ++i)
+    {
+        if (m.tomb[i][kezdosor] != 0)
+            return i;
+    }
+    return -1;
+}
+
 void Matrix_Gauss(Matrix *m)
 {
     int k = m->sor;
     int n = m->oszlop;
-    
+    int a;
     for (int i = 0; i < k; ++i)
     {
-        sorszoroz_helyben(m->tomb[i], n, 1/m->tomb[i][i]);
-        printf("sorszoroz:\n");
-        Matrix_kiir(*m);
-        for (int t = 1; t < k; ++t)
+        if (m->tomb[i][i] != 0)
         {
-            double *bontosor = sorszoroz(m->tomb[i], n, -m->tomb[t][i]);
+            sorszoroz_helyben(m->tomb[i], n, 1/m->tomb[i][i]);
+        }
+        else
+        {
+            a = _van_meg_nemnulla_sor(*m, i);
+            a > 0 ? printf("%d van, %d\n", i, a) : printf("%d nincs, %d\n", i, a);
+            if (a > 0)
+            {
+                Matrix_sorcsere_helyben(m, i, a);
+                sorszoroz_helyben(m->tomb[i], n, 1/m->tomb[i][i]);
+            }
+            else 
+            {
+                continue;
+            }
+        }
+        
+        printf("sorszoroz:\n");
+        
+            
+        Matrix_kiir(*m);
+        for (int t = i + 1; t < k; ++t)
+        {
+            if (t == a)
+                continue;
+            double *bontosor = sorszoroz(m->tomb[i], n, -1*m->tomb[t][i]);
+            printf("   %lf    ->", -1*m->tomb[t][i]);
+            for (int z = 0; z < n; ++z)
+                printf("%lf ", bontosor[z]);
+            printf("\n");
             sorosszead_helyben(m->tomb[t], bontosor, n);
+            free(bontosor);
             Matrix_kiir(*m);
         }
+        
     }
 
 }
+
+void rref(Matrix *m)
+{
+    int k = m->sor;
+    int n = m->oszlop;
+    
+    int l = 0;
+    while (l < k)
+    {
+        double d, mult;
+        
+        for (int r = 0; r < k; ++r)
+        {
+            d = m->tomb[l][l];
+            mult = m->tomb[r][l] / d;
+            
+            for (int c = 0; c < n; ++c)
+            {
+                if (r == l)
+                    m->tomb[r][c] /= d;
+                else
+                    m->tomb[r][c] -= m->tomb[l][c] * mult;
+            }
+            
+        }
+        l++;
+        Matrix_kiir(*m);
+    }
+    
+    
+}
+
 
 /*
 for (int i = 0; i < m->sor; ++i)

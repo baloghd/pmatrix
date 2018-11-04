@@ -9,7 +9,7 @@ void Matrix_kiir(Matrix m)
     {
         for (int j = 0; j < m.oszlop; ++j)
         {
-             printf("%5.5f ", m.tomb[i][j]);
+             printf("%5.2f ", m.tomb[i][j]);
         }
         printf("\n");
     }
