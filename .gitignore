@@ -58,5 +58,5 @@ dkms.conf
 *.mk
 *.project
 *.txt
-Release/
+Release/*
 # End of https://www.gitignore.io/api/c
