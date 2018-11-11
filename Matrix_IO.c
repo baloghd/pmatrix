@@ -2,7 +2,7 @@
 
 #include "Matrix.h"
 #include "Matrix_IO.h"
-
+/** a kiírja a mátrixot **/
 void Matrix_kiir(Matrix m)
 {
     for (int i = 0; i < m.sor; ++i)
@@ -15,7 +15,7 @@ void Matrix_kiir(Matrix m)
     }
     printf("\n");
 }
-
+/** a kiírja a mátrixot Octave-nak is jó formátumban **/
 void Matrix_kiir_Octave(Matrix m)
 {
     printf("[");
@@ -32,7 +32,7 @@ void Matrix_kiir_Octave(Matrix m)
     }
     printf("]\n");
 }
-
+/** placeholder segédfüggvény (stackoverflow.com-ról)**/
 int match(const char *s, const char *p, int overlap)
 {
         int c = 0, l = strlen(p);
@@ -44,7 +44,7 @@ int match(const char *s, const char *p, int overlap)
         }
         return c;
 }
-
+/** sztringből beolvasott mátrix **/
 Matrix Matrix_sztringbol(char *sz)
 {
     //standard elvalasztok:
@@ -93,7 +93,8 @@ Matrix Matrix_sztringbol(char *sz)
     }
     return k;
 }
-
+/** a Matrix_sztringből megvalósítása lesz sztringkezelő függvények
+ * okosabb használatával **/
 Matrix Matrix_sztringbol_strtok(char *sz)
 {
     char elval[2] = ",";

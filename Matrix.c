@@ -3,8 +3,10 @@
 
 #include "Matrix.h"
 
+/** a Matrix struktúrának foglal helyet **/
 bool Matrix_memfoglal(Matrix *m)
 {
+	
     m->tomb = (double **) malloc(m->sor * sizeof(double *));
 
     for (int i = 0; i < m->sor; ++i)
@@ -14,7 +16,7 @@ bool Matrix_memfoglal(Matrix *m)
 
     return m->tomb != NULL;
 }
-
+/** a Matrix struktúrának foglalt helyet szabadítja fel **/
 void Matrix_memfelszab(Matrix *m)
 {
     for (int i = 0; i < m->sor; ++i)
@@ -23,7 +25,7 @@ void Matrix_memfelszab(Matrix *m)
     }
     free(m->tomb);
 }
-
+/** a Matrixot inicializáló fgv **/
 Matrix Matrix_inic(int sor, int oszlop)
 {
     Matrix m;
@@ -40,7 +42,7 @@ Matrix Matrix_inic(int sor, int oszlop)
         return (Matrix) {0, 0};
     }
 }
-
+/** a megadott méretű identitás-mátrixot visszaadó fgv **/
 Matrix Matrix_identitas(int sor)
 {
     Matrix m = Matrix_inic(sor, sor);

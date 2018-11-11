@@ -16,9 +16,8 @@ int main()
     //Matrix gg = Matrix_sztringbol("1,1,2,2,1,-1;4,4,8,9,1,-7;2,5,13,1,26,10;1,3,8,2,11,1;2,1,1,2,3,3;");
     Matrix gg = Matrix_sztringbol("2,-1,6,12;2,2,3,24;6,-1,17,46;4,-1,13,32;");
     Matrix_kiir(gg);
-    Matrix_Gauss(&gg);
-    
-    //rref(&gg);
+    //Matrix_Gauss(&gg);
+   
     Matrix_kiir(gg);
  
     Matrix_memfelszab(&gg);
