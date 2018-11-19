@@ -45,13 +45,13 @@ void sorosszead_helyben(double *sor1, double *sor2, int meret)
     }
 }
 /*** http://mathworld.wolfram.com/MatrixTrace.html ***/
-double Matrix_nyom(Matrix m)
+double Matrix_nyom(Matrix *m)
 {
     assert(m->sor == m->oszlop);
     double nyom = 0;
     for (int i = 0; i < m->sor; ++i)
     {
-        nyom += m.tomb[i][i];
+        nyom += m->tomb[i][i];
     }
     return nyom;
 }

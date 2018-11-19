@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
 
 #include "Matrix.h"
 #include "Matrix_IO.h"
@@ -61,7 +63,6 @@ Matrix Matrix_sztringbol(char *sz)
     Matrix k = Matrix_inic(ssor, ooszlop);
 
     char *p = sz, *ujo = strstr(p, ";");
-    double d;
     int oszlop = 0;
     int sor = 0;
 
@@ -95,7 +96,7 @@ Matrix Matrix_sztringbol(char *sz)
 }
 /** a Matrix_sztringből megvalósítása lesz sztringkezelő függvények
  * okosabb használatával **/
-Matrix Matrix_sztringbol_strtok(char *sz)
+/* Matrix Matrix_sztringbol_strtok(char *sz)
 {
     char elval[2] = ",";
     char sorelval[2] = ";";
@@ -104,9 +105,17 @@ Matrix Matrix_sztringbol_strtok(char *sz)
     sor = strtok(m, sorelval);
     printf("%s", sor);
 }
-
-/* Matrix Matrix_fajlbol(FILE *fp)
-{
-    
-}
 */
+
+Matrix *Matrix_fajlbol(FILE *fp)
+{
+	int meret = 0;
+	char buffer[512];
+	while (fscanf(fp, "%s", buffer) != EOF)
+        meret++;
+    fseek(fp, 0, SEEK_SET);
+    Matrix *vissza;
+    Matrix_memfoglal(vissza);
+    return vissza;
+}
+
