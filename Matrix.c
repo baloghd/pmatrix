@@ -16,6 +16,7 @@ bool Matrix_memfoglal(Matrix *m)
 
     return m->tomb != NULL;
 }
+
 /** a Matrix struktúrának foglalt helyet szabadítja fel **/
 void Matrix_memfelszab(Matrix *m)
 {
@@ -43,7 +44,7 @@ Matrix Matrix_inic(int sor, int oszlop)
     }
 }
 /** a megadott méretű identitás-mátrixot visszaadó fgv **/
-Matrix Matrix_identitas(int sor)
+Matrix Matrix_egyseg(int sor)
 {
     Matrix m = Matrix_inic(sor, sor);
     for (int i = 0; i < sor; ++i)

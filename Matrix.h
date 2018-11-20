@@ -16,7 +16,7 @@ void Matrix_memfelszab(Matrix *m);
 
 Matrix Matrix_inic(int sor, int oszlop);
 
-Matrix Matrix_identitas(int sor);
+Matrix Matrix_egyseg(int sor);
 
 
 #endif
