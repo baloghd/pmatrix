@@ -54,6 +54,11 @@ int main()
     //Matrix *A = Matrix_sztringbol_strtok("1,2,3;0,3,4;2,2,2;", -1, -1);
     Matrix *A = Matrix_sztringbol_strtok("2,4,5,6;4,2,7,1;8,7,0,3;", -1, -1);
     Matrix *redukalt_A = Matrix_Gauss(A);
+    Matrix_kiir(redukalt_A);
+    
+    FILE *output = fopen("TESZT_REDUKALT_KI.mtrx", "w");
+    Matrix_fajlba_ir(redukalt_A, output);
+        
     Matrix_memfelszab(A);
     Matrix_memfelszab(redukalt_A);
    
