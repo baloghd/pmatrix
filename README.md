@@ -10,8 +10,8 @@ A modularitást szem előtt tartva pmatrix több fejlécből épül fel. Ezek:
   - a be- és kimeneti fájlformátum tetszőleges elválasztókarakterrel használható, alapértelmezésben pontosvessző
   - a be- és kimenet lényegében fejléc nélküli csv fájl
   - a sztring kimenet alapértelmezésben kompatibilis a Matlab/Octave formátummal
-    - pl. a 2x2-es identitásmátrix = [1, 0; 0,1]
-- *Matrix_muveletek.h*: a Matrixokon végrehajtható műveleteket tárolja
+    - pl. a 2x2-es identitásmátrix = [1, 0; 0,1;]
+- *Matrix_muvelet.h*: a Matrixokon végrehajtható műveleteket tárolja
   - ezek is modulárisan épülnek fel, tehát pl. a Gauss-elimináció segédfüggvényeket használ a sorok cseréjére vagy szorzására (ezek önmagukban is használhatóak, ha az alkalmazás megkívánja)
   - alapműveletek mátrixokkal, transzponálás, invertálás
   - Gauss-elimináció
