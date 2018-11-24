@@ -7,6 +7,8 @@
 #include "Matrix.h"
 #include "Matrix_IO.h"
 #include "Matrix_muvelet.h"
+#include "debugmalloc.h"
+
 
 int main()
 {
@@ -32,18 +34,22 @@ int main()
 	*/
 	
     
-    Matrix gg = Matrix_fajlbol_olvas("TESZTMATRIX.mtrx");
-    Matrix_kiir(gg);
-    printf("beolvasas 1. sikerult\n");
-    
+    //Matrix *gg = Matrix_fajlbol_olvas("TESZTMATRIX.mtrx");
+    Matrix *gg = Matrix_sztringbol_strtok("2,-1,6,12;2,2,3,24;6,-1,17,46;4,-1,13,32;", -1, -1);
+    Matrix_kiir(*gg);
+
     FILE *output = fopen("TESZT_KI.mtrx", "w");
     Matrix_fajlba_ir(gg, output);
-    printf("kiiras sikerult\n");
+    Matrix_memfelszab(gg);
     
-    Matrix_memfelszab(&gg);
-    Matrix ff = Matrix_fajlbol_olvas("TESZT_KI.mtrx");
-    Matrix_kiir(ff);
-    printf("beolvasas 2. sikerult\n");
+    Matrix *ff = Matrix_fajlbol_olvas("TESZT_KI.mtrx");
+    Matrix *masolat = Matrix_masol(ff);
+    Matrix_kiir(*masolat);
+    
+    Matrix_memfelszab(masolat);
+    Matrix_memfelszab(ff);
+    
+   
     
     return 0;
 }

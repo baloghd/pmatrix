@@ -7,6 +7,8 @@
 #include "config.h"
 #include "Matrix.h"
 #include "Matrix_IO.h"
+#include "debugmalloc.h"
+
 
 /** a kiírja a mátrixot **/
 void Matrix_kiir(Matrix m)
@@ -41,12 +43,12 @@ void Matrix_kiir_Octave(Matrix m)
 
 /** a Matrix_sztringből megvalósítása lesz sztringkezelő függvények
  * okosabb használatával **/
-Matrix Matrix_sztringbol_strtok(const char *Matrix_sztring, int arg_n_sor, int arg_n_oszlop)
+Matrix *Matrix_sztringbol_strtok(const char *Matrix_sztring, int arg_n_sor, int arg_n_oszlop)
 {
     char elval[2] = PMATRIX_OSZLOP_ELVALASZTO;
     char sorelval[2] = PMATRIX_SOR_ELVALASZTO;
-    char *m = (char *) malloc(sizeof(char) * strlen(Matrix_sztring));
-    char *mcopy = (char *) malloc(sizeof(char) * strlen(Matrix_sztring));
+    char *m = (char *) malloc(sizeof(char) * (strlen(Matrix_sztring) + 1));
+    char *mcopy = (char *) malloc(sizeof(char) * (strlen(Matrix_sztring) + 1));
     strcpy(m, Matrix_sztring);
     strcpy(mcopy, Matrix_sztring);
    
@@ -76,7 +78,7 @@ Matrix Matrix_sztringbol_strtok(const char *Matrix_sztring, int arg_n_sor, int a
 		n_oszlop = arg_n_oszlop;
 	}
 
-	Matrix vissza = Matrix_inic(n_sor, n_oszlop);
+	Matrix *vissza = Matrix_inic(n_sor, n_oszlop);
     int iter_sor = 0, iter_oszlop = 0;
     sor = strtok_r(mcopy, sorelval, &sor_reent_ptr);
 	while (sor != NULL)
@@ -85,7 +87,7 @@ Matrix Matrix_sztringbol_strtok(const char *Matrix_sztring, int arg_n_sor, int a
 		 while (oszlop != NULL)
 		 {
 			char *e;
-			vissza.tomb[iter_sor][iter_oszlop++] = strtod(oszlop, &e);
+			vissza->tomb[iter_sor][iter_oszlop++] = strtod(oszlop, &e);
 			oszlop = strtok_r(NULL, elval, &oszlop_reent_ptr);
 		 }
 		 sor = strtok_r(NULL, sorelval, &sor_reent_ptr);
@@ -135,7 +137,7 @@ void replace(char * o_string, char * s_string, char * r_string) {
  * 		s			a mátrix sorai a fájlban is soronként vannak 
  * 
  * **/
-Matrix Matrix_fajlbol_olvas(char *fajlnev)
+Matrix *Matrix_fajlbol_olvas(char *fajlnev)
 {
 	/** a .mtrx kiterjesztésű fájloknak van fejléce **/ 
 	FILE *fp = fopen(fajlnev, "r");
@@ -148,7 +150,7 @@ Matrix Matrix_fajlbol_olvas(char *fajlnev)
     {
 		if(strstr(buffer, "pmatrix"))
 		{
-			char *header = (char *) malloc(sizeof(char)*strlen(buffer));
+			char *header = (char *) malloc(sizeof(char)*(strlen(buffer) + 1));
 			strcpy(header, buffer);
 			_fejlec_feldolgoz(header, &sor, &oszlop, &formatum);
 			//printf("sor:%d\noszlop:%d\nformatum:%d\n", sor, oszlop, formatum);
@@ -156,7 +158,7 @@ Matrix Matrix_fajlbol_olvas(char *fajlnev)
 			break;
 		}
     }
-    Matrix vissza;
+    Matrix *vissza;
     if (formatum == MATRIX_FF_EGYSORBAN)
     {
 		while (fgets(buffer, PMATRIX_BUFFER_MERET, fp) != NULL)
@@ -208,6 +210,7 @@ void _fejlec_feldolgoz(char *fejlec,
 	token = strtok_r(NULL, header_elvalaszto, &strtok_r_reentr);
 	*sor = atoi(token);
 	
+	
 	//sorelvalaszto, ha van
 	if (*formatum == MATRIX_FF_EGYSORBAN)
 	{
@@ -224,35 +227,46 @@ void _fejlec_feldolgoz(char *fejlec,
 	{
 		token = strtok_r(NULL, header_elvalaszto, &strtok_r_reentr);
 	}
+	printf("%d %d\n", *sor, *oszlop);
 
 }
 #define FORMATUMKOD "s"
-void Matrix_fajlba_ir(Matrix m, FILE *fp)
+void Matrix_fajlba_ir(Matrix *m, FILE *fp)
 {
+	/* fejléc, formátuma:
+	 pmatrix_<v>_<ff>_<sor>_(<OPCIONÁLIS: egy_sor>)_<oszlop>_(<OPCIONÁLIS: egy_oszl>)
+				v: pmatrix verzió
+			   ff: fájlformátum kód
+			  sor: sorok száma
+	      egy_sor: egyedi sorelválasztó karakter
+	       oszlop: oszlopok száma
+	     egy_oszl: egyedi oszlopelválasztó karakter
+	 * 
+	 */
 	
-	fprintf(fp, "pmatrix%s%d.%d%s%s%s%d%s%s%d%s%s\n", PMATRIX_FEJLEC_ELVALASZTO,
-												PMATRIX_VERZIO,
-												PMATRIX_ALVERZIO,
-												PMATRIX_FEJLEC_ELVALASZTO,
-												FORMATUMKOD,
-												PMATRIX_FEJLEC_ELVALASZTO,
-												m.sor,
-												PMATRIX_FEJLEC_ELVALASZTO,
-												PMATRIX_FEJLEC_ELVALASZTO,
-												m.oszlop,
-												PMATRIX_FEJLEC_ELVALASZTO,
-												PMATRIX_FEJLEC_ELVALASZTO);
-	for (int i = 0; i < m.sor; ++i)
+	fprintf(fp, "pmatrix%s%d.%d%s%s%s%d%s%s%d%s%s\n",   PMATRIX_FEJLEC_ELVALASZTO,
+														PMATRIX_VERZIO,
+														PMATRIX_ALVERZIO,
+														PMATRIX_FEJLEC_ELVALASZTO,
+														FORMATUMKOD,
+														PMATRIX_FEJLEC_ELVALASZTO,
+														m->sor,
+														PMATRIX_FEJLEC_ELVALASZTO,
+														PMATRIX_FEJLEC_ELVALASZTO,
+														m->oszlop,
+														PMATRIX_FEJLEC_ELVALASZTO,
+														PMATRIX_FEJLEC_ELVALASZTO);
+	for (int i = 0; i < m->sor; ++i)
     {
-        for (int j = 0; j < m.oszlop; ++j)
+        for (int j = 0; j < m->oszlop; ++j)
         {
-			if (j < m.oszlop - 1)
-				fprintf(fp, "%.2f ", m.tomb[i][j]);
+			if (j < m->oszlop - 1)
+				fprintf(fp, "%.2f ", m->tomb[i][j]);
 			else
-				fprintf(fp, "%.2f", m.tomb[i][j]);
+				fprintf(fp, "%.2f", m->tomb[i][j]);
 			
         }
-        if (i < m.sor - 1)
+        if (i < m->sor - 1)
 			fprintf(fp, "\n");
     }
 	fclose(fp);

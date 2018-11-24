@@ -6,6 +6,7 @@
 #include "Matrix.h"
 #include "Matrix_IO.h"
 #include "Matrix_muvelet.h"
+#include "debugmalloc.h"
 
 
 /** megszorozza egy sor összes elemét egy számmal, új sort visszaadva **/
@@ -73,28 +74,28 @@ void Matrix_oszlopcsere_helyben(Matrix *m, int egyikoszlop, int masikoszlop)
     }
 }
 /** összead két mátrixot **/
-Matrix Matrix_osszead(Matrix m1, Matrix m2)
+Matrix *Matrix_osszead(Matrix m1, Matrix m2)
 {
     assert(((m1.sor == m2.sor) && (m2.oszlop == m2.oszlop)) && "HIBA: csak azonos meretu Matrixok adhatoak ossze.");
     
-    Matrix t = Matrix_inic(m1.sor, m1.oszlop);
+    Matrix *t = Matrix_inic(m1.sor, m1.oszlop);
 
     for (int i = 0; i < m1.sor; ++i)
     {
         for (int j = 0; j < m1.oszlop; ++j)
         {
-            t.tomb[i][j] = m1.tomb[i][j] + m2.tomb[i][j];
+            t->tomb[i][j] = m1.tomb[i][j] + m2.tomb[i][j];
         }
     }
 
     return t;
 }
 /** megszoroz két mátrixot **/
-Matrix Matrix_szorzas(Matrix jobb, Matrix bal)
+Matrix *Matrix_szorzas(Matrix jobb, Matrix bal)
 {
     assert(((jobb.sor == bal.oszlop) && (jobb.oszlop == bal.sor)) && "HIBA: szorzando Matrixok dimenzioira igaznak kell lennie, hogy [i x j] * [j x i]");
     
-    Matrix szorzat = Matrix_inic(jobb.sor, bal.oszlop);
+    Matrix *szorzat = Matrix_inic(jobb.sor, bal.oszlop);
     for (int i = 0; i < jobb.sor; ++i)
     {
         int j, k;
@@ -105,7 +106,7 @@ Matrix Matrix_szorzas(Matrix jobb, Matrix bal)
             {
                 sum += jobb.tomb[i][k] * bal.tomb[k][j];
             }
-            szorzat.tomb[i][j] = sum;
+            szorzat->tomb[i][j] = sum;
         }
     }
     return szorzat;
