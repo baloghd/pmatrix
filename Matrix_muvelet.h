@@ -3,6 +3,8 @@
 
 #include "Matrix.h"
 
+/*! \file */ 
+
 double *sorszoroz(double *sor, int meret, double mivel);
 
 void sorszoroz_helyben(double *sor, int meret, double mivel);

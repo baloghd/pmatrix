@@ -9,6 +9,8 @@
 #include "Matrix_IO.h"
 #include "debugmalloc.h"
 
+/*! \file */ 
+
 /** a kiírja a mátrixot **/
 void Matrix_kiir(Matrix *m)
 {

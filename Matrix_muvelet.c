@@ -8,6 +8,8 @@
 #include "Matrix_muvelet.h"
 #include "debugmalloc.h"
 
+/*! \file */ 
+
 /** megszorozza egy sor összes elemét egy számmal, új sort visszaadva **/
 double *sorszoroz(double *sor, int meret, double mivel)
 {

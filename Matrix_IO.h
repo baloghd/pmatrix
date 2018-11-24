@@ -5,10 +5,18 @@
 
 #include "Matrix.h"
 
+/*! \file */ 
+
+/*!
+ * \brief a fájlba írt mátrix lehetséges formátumai
+ */
 typedef enum Matrix_FAJLFORMATUM {
+	/*! a kiírandó fájl első sora a fejléc, a második sora a mátrix*/
 	MATRIX_FF_EGYSORBAN,
+	/*! a kiírandó fájl első sora a fejléc, a mátrix ezután soronként íródik bele*/
 	MATRIX_FF_SORONKENT
 } Matrix_FAJLFORMATUM;
+
 
 void Matrix_kiir(Matrix *m);
 

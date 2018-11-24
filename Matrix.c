@@ -4,8 +4,13 @@
 #include "Matrix.h"
 #include "debugmalloc.h"
 
+/*! \file */ 
 
-/** a Matrix struktúrának foglal helyet **/
+/*! 
+ *  \brief a Matrix struktúrának foglal helyet
+ *  \param m a mátrixra mutató pointer
+ * 	\return true, ha sikerült a memóriafoglalás; false, ha nem
+ */
 bool Matrix_memfoglal(Matrix *m)
 {
     m->tomb = (double **) malloc(m->sor * sizeof(double *));
@@ -18,7 +23,10 @@ bool Matrix_memfoglal(Matrix *m)
     return m->tomb != NULL;
 }
 
-/** a Matrix struktúrának foglalt helyet szabadítja fel **/
+/*!
+ *  \brief a Matrix struktúrának foglalt helyet szabadítja fel
+ *  \param m a felszabadítandó mátrix
+ */
 void Matrix_memfelszab(Matrix *m)
 {
     for (int i = 0; i < m->sor; ++i)
@@ -28,7 +36,12 @@ void Matrix_memfelszab(Matrix *m)
     free(m->tomb);
     free(m);
 }
-/** a Matrixot inicializáló fgv **/
+/*!
+ *  \brief a Matrixot inicializáló függvény
+ *  \param sor a sorok száma
+ *  \param oszlop a oszlopok száma
+ * 	\return az inicializált mátrixra mutató pointer
+ */
 Matrix *Matrix_inic(int sor, int oszlop)
 {
     Matrix *m = (Matrix *) malloc(sizeof(Matrix));
@@ -45,7 +58,11 @@ Matrix *Matrix_inic(int sor, int oszlop)
         return m;
     }
 }
-/** a megadott méretű identitás-mátrixot visszaadó fgv **/
+/*!
+ *  \brief a megadott méretű  egységmátrixot visszaadó függvény
+ *  \param sor a sorok száma (= oszlopok száma, négyzetes mátrix)
+ * 	\return az inicializált mátrixra mutató pointer
+ */
 Matrix *Matrix_egyseg(int sor)
 {
     Matrix *m = Matrix_inic(sor, sor);
@@ -58,7 +75,11 @@ Matrix *Matrix_egyseg(int sor)
     }
     return m;
 }
-
+/*!
+ *  \brief mátrixot másol egy újonnan lefoglalt helyre
+ *  \param mit a másolandó mátrixra mutató pointer
+ * 	\return a másolt mátrixra mutató pointer
+ */
 Matrix *Matrix_masol(Matrix *mit)
 {
 	Matrix *hova = Matrix_inic(mit->sor, mit->oszlop);

@@ -63,7 +63,7 @@ int main()
     Matrix_kiir(redukalt_A);
     printf("az A matrix rangja: %d\n\n", Matrix_rang(A));
     
-    Matrix *B = Matrix_sztringbol_strtok("1,2,3;4,0,6;7,8,9;", -1, -1);
+    Matrix *B = Matrix_sztringbol_strtok("4,5,10,12;6,7,8,-5;3,4,8,18;5,6,7,1;", -1, -1);
     Matrix *B_inverz = Matrix_inverz(B);
     Matrix_kiir(B_inverz);
 

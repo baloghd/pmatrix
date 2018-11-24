@@ -3,6 +3,8 @@
 
 #include <stdbool.h>
 
+/*! \file */ 
+
 typedef struct Matrix
 {
     int sor, oszlop;
