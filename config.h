@@ -11,7 +11,9 @@
 #define PMATRIX_OSZLOP_ELVALASZTO ","
 #endif
 
-
+#ifndef PMATRIX_BUFFER_MERET
+#define PMATRIX_BUFFER_MERET 2048
+#endif
 
 
 

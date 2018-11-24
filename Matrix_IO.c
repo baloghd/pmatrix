@@ -4,8 +4,10 @@
 #include <ctype.h>
 #include <string.h>
 
+#include "config.h"
 #include "Matrix.h"
 #include "Matrix_IO.h"
+
 /** a kiírja a mátrixot **/
 void Matrix_kiir(Matrix m)
 {
@@ -36,72 +38,13 @@ void Matrix_kiir_Octave(Matrix m)
     }
     printf("]\n");
 }
-/** placeholder segédfüggvény (stackoverflow.com-ról)**/
-int match(const char *s, const char *p, int overlap)
-{
-        int c = 0, l = strlen(p);
 
-        while (*s != '\0') {
-                if (strncmp(s++, p, l)) continue;
-                if (!overlap) s += l - 1;
-                c++;
-        }
-        return c;
-}
-/** sztringből beolvasott mátrix **/
-Matrix Matrix_sztringbol(char *sz)
-{
-    //standard elvalasztok:
-    // ,    elemek
-    // ;    sorok
-    // tehat 1,2,3;4,5,6 =
-    // [1 2 3
-    //  4 5 6]
-    char elval[] = ",";
-    char sorelval[] = ";";
-    int ssor = match(sz, sorelval, 0);
-    int ooszlop = (match(sz, elval, 0) + ssor) / ssor;
-
-    Matrix k = Matrix_inic(ssor, ooszlop);
-
-    char *p = sz, *ujo = strstr(p, ";");
-    int oszlop = 0;
-    int sor = 0;
-
-    while (true)
-    {
-        sscanf(p, "%lf", &(k.tomb[sor][oszlop]));
-        oszlop++;
-        p = strstr(p, elval);
-
-        if ((p - ujo) >= 0)
-        {
-            sor++;
-            p = ujo;
-            p++;
-            ujo = strstr(p, sorelval);
-            oszlop = 0;
-        }
-        else
-        {
-            if (p != NULL)
-            {
-                p++;
-            }
-            else
-            {
-                break;
-            }
-        }
-    }
-    return k;
-}
 /** a Matrix_sztringből megvalósítása lesz sztringkezelő függvények
  * okosabb használatával **/
-Matrix Matrix_sztringbol_strtok(const char *Matrix_sztring)
+Matrix Matrix_sztringbol_strtok(const char *Matrix_sztring, int arg_n_sor, int arg_n_oszlop)
 {
-    char elval[2] = ",";
-    char sorelval[2] = ";";
+    char elval[2] = PMATRIX_OSZLOP_ELVALASZTO;
+    char sorelval[2] = PMATRIX_SOR_ELVALASZTO;
     char *m = (char *) malloc(sizeof(char) * strlen(Matrix_sztring));
     char *mcopy = (char *) malloc(sizeof(char) * strlen(Matrix_sztring));
     strcpy(m, Matrix_sztring);
@@ -109,26 +52,31 @@ Matrix Matrix_sztringbol_strtok(const char *Matrix_sztring)
    
     char *sor, *oszlop, *sor_reent_ptr, *oszlop_reent_ptr;
     int n_sor = 0, n_oszlop = 0;
-    
-    //először megnézzük hány sora és oszlopa van a mátrixnak
-    sor = strtok(m, sorelval);
-    while (sor != NULL)
+    if (arg_n_sor == -1 || arg_n_oszlop == -1)
     {
-		 //printf("%s\n", sor);
-		 sor = strtok(NULL, sorelval);
-		 n_sor++;
+		//ha nincs info, először megnézzük hány sora és oszlopa van a mátrixnak
+		sor = strtok(m, sorelval);
+		while (sor != NULL)
+		{
+			
+			 sor = strtok(NULL, sorelval);
+			 n_sor++;
+		}
+		
+		oszlop = strtok(m, elval);
+		while (oszlop != NULL)
+		{
+			 oszlop = strtok(NULL, elval);
+			 n_oszlop++;
+		}
 	}
-	
-    oszlop = strtok(m, elval);
-    while (oszlop != NULL)
-    {
-		 //printf("%s ", oszlop);
-		 oszlop = strtok(NULL, elval);
-		 n_oszlop++;
+	else 
+	{
+		n_sor = arg_n_sor;
+		n_oszlop = arg_n_oszlop;
 	}
 
 	Matrix vissza = Matrix_inic(n_sor, n_oszlop);
-	
     int iter_sor = 0, iter_oszlop = 0;
     sor = strtok_r(mcopy, sorelval, &sor_reent_ptr);
 	while (sor != NULL)
@@ -154,47 +102,60 @@ Matrix Matrix_sztringbol_strtok(const char *Matrix_sztring)
  * 
  * fájlból olvas be mátrixot, a fájl fejlécének figyelembe vételével
  *  ami az alábbi formátumban van:
- * 		pmatrix<verzió>_<sorok száma>_<oszlopok száma>_<formátumkód>
+ * 		pmatrix<verzió>_<formátumkód>_<sorok száma>_(opcionális sorelválasztó definíció)_<oszlopok száma>_(opcionális oszlopelválasztó definíció)
  * 			
  * 	a valid formátumkódok:
- * 		#e			egy sorban az egész mátrix definíció
- * 		#s			a mátrix sorai a fájlban is soronként vannak 
+ * 		e			egy sorban az egész mátrix definíció
+ * 		s			a mátrix sorai a fájlban is soronként vannak 
  * 
  * **/
 Matrix Matrix_fajlbol_olvas(char *fajlnev)
 {
 	/** a .mtrx kiterjesztésű fájloknak van fejléce **/ 
 	FILE *fp = fopen(fajlnev, "r");
-	
-	int meret = 0;
-	char buffer[512];
-	while (fscanf(fp, "%s", buffer) != EOF)
-        meret++;
-    fseek(fp, 0, SEEK_SET);
+    char buffer[PMATRIX_BUFFER_MERET];
     
     int sor, oszlop;
     Matrix_FAJLFORMATUM formatum;
     
-    while (fgets(buffer, 512, fp))
+    while (fgets(buffer, PMATRIX_BUFFER_MERET, fp))
     {
 		if(strstr(buffer, "pmatrix"))
 		{
-			printf("in header\n");
-			
 			char *header = (char *) malloc(sizeof(char)*strlen(buffer));
 			strcpy(header, buffer);
-
 			_fejlec_feldolgoz(header, &sor, &oszlop, &formatum);
 			free(header);
-			printf("sor: %d, oszlop: %d\n");
-		}
-		else
-		{
-			printf("buffer: %s", buffer);
+			break;
 		}
     }
+    Matrix vissza;
+    if (formatum == MATRIX_FF_EGYSORBAN)
+    {
+		while (fgets(buffer, PMATRIX_BUFFER_MERET, fp) != NULL)
+		{
+			// az fgets nem szedi le a newline karaktert,
+			// a Matrix_sztringbol_strtok-nak viszont anélkül kell
+			char *iter;
+			if ((iter = strchr(buffer, '\n')) != NULL)
+				*iter = '\0';
+				
+			vissza = Matrix_sztringbol_strtok(buffer, sor, oszlop);
+		}
+	}
+	else 
+	{
+		vissza = Matrix_inic(sor, oszlop);
+	}
     
-    Matrix vissza = Matrix_inic(5 ,5);
+    /*int iter_sor = 0, iter_oszlop = 0;
+	while (fgets(buffer, PMATRIX_BUFFER_MERET, fp))
+    {
+		printf("buf: %s", buffer);
+		
+		
+	}
+	*/
     return vissza;
 }
 
@@ -204,28 +165,42 @@ void _fejlec_feldolgoz(char *fejlec,
 					  Matrix_FAJLFORMATUM *formatum)
 {
 	const char header_elvalaszto[2] = "_";
-	char *token, *strtok_r_reentr, *e;
+	char *token, *strtok_r_reentr;
 	
-	//a pmatrix jelzőt átugorjuk
+	//a 'pmatrix' jelzőt átugorjuk
 	token = strtok_r(fejlec, header_elvalaszto, &strtok_r_reentr);
 	
-	//verziószám
+	//a verziószámot is
 	token = strtok_r(NULL, header_elvalaszto, &strtok_r_reentr);
 	
 	//formátumkód
 	token = strtok_r(NULL, header_elvalaszto, &strtok_r_reentr);
-	//alapértelmezetetten soronként
+	//alapértelmezetetten soronként ('s' formátumkód);
+	//'e' formátumkódnál egy sorban az egész
 	*formatum = MATRIX_FF_SORONKENT;
-	if (strcmp(token, "e"))
+	if (strcmp(token, "e") == 0)
 		*formatum = MATRIX_FF_EGYSORBAN;
-		
-	//
-			
-		
+
+	//sorok száma
+	token = strtok_r(NULL, header_elvalaszto, &strtok_r_reentr);
+	*sor = atoi(token);
 	
-	printf("%s", token);
+	//sorelvalaszto, ha van
+	if (*formatum == MATRIX_FF_EGYSORBAN)
+	{
+		token = strtok_r(NULL, header_elvalaszto, &strtok_r_reentr);
+	}
+
+	//oszlopok száma
+	token = strtok_r(NULL, header_elvalaszto, &strtok_r_reentr);
+	*oszlop = atoi(token);
 	
-	printf("\n");
+	//oszlopelvalaszto, ha van
+	if (*formatum == MATRIX_FF_EGYSORBAN)
+	{
+		token = strtok_r(NULL, header_elvalaszto, &strtok_r_reentr);
+	}
+
 }
 
 void Matrix_fajlba_ir(FILE *fp)
