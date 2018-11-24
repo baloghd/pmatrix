@@ -154,6 +154,7 @@ void Matrix_Gauss(Matrix *m)
                 continue;
             double *bontosor = sorszoroz(m->tomb[i], n, -1*m->tomb[t][i]);
             printf("   %lf    ->", -1*m->tomb[t][i]);
+			printf("\n");
             for (int z = 0; z < n; ++z)
                 printf("%lf ", bontosor[z]);
             sorosszead_helyben(m->tomb[t], bontosor, n);
@@ -164,3 +165,30 @@ void Matrix_Gauss(Matrix *m)
     }
 
 }
+
+bool _nullasor(double *sor, int meret)
+{
+	for (int i = 0; i < meret; ++i)
+	{
+		if (sor[i] != 0)
+			return false;
+	}
+	return true;
+}
+
+int Matrix_rang(const Matrix m)
+{
+	int rang = 0;
+	
+	//a nulla elemű mátrix rangja 0 
+	if (m.sor == 0 || m.oszlop == 0)
+		return rang;
+
+	for (int i = 0; i < m.sor; ++i)
+	{
+		//ha a sor nem nullás sor, a rang eggyel növekszik
+		if (!_nullasor(m.tomb[i], m.oszlop))
+			rang++;
+	}
+	return rang;
+} 

@@ -25,4 +25,8 @@ Matrix Matrix_osszead(Matrix m1, Matrix m2);
 
 Matrix Matrix_szorzas(Matrix jobb, Matrix bal);
 
+bool _nullasor(double *sor, int meret);
+
+int Matrix_rang(const Matrix m);
+
 #endif

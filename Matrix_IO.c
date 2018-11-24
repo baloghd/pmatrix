@@ -128,27 +128,26 @@ Matrix Matrix_sztringbol_strtok(char *sz)
 		 n_oszlop++;
 	}
 	printf("%d oszlop\n", n_oszlop);
-   
-    
-    sor = strtok_r(m, sorelval, &sor_reent_ptr);
+	Matrix vissza = Matrix_inic(n_sor, n_oszlop);
+	
+    int iter_sor = 0, iter_oszlop = 0;
+    sor = strtok_r(mcopy, sorelval, &sor_reent_ptr);
 	while (sor != NULL)
     {
 		 oszlop = strtok_r(sor, elval, &oszlop_reent_ptr);
 		 while (oszlop != NULL)
 		 {
 			printf("%s ", oszlop);
+			char *e;
+			//vissza.tomb[iter_sor][iter_oszlop] = strtod(oszlop, &e);
 			oszlop = strtok_r(NULL, elval, &oszlop_reent_ptr);
+			iter_oszlop++;
 		 }
 		 printf("\n");
 		 sor = strtok_r(NULL, sorelval, &sor_reent_ptr);
+		 iter_sor++;
 	}
-    
 
-	
-	Matrix vissza = Matrix_inic(n_sor, n_oszlop);
-	
-	
-	
     return vissza;
 }
 
