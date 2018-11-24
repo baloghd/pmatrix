@@ -122,16 +122,17 @@ int _van_meg_nemnulla_sor(Matrix m, int kezdosor)
     return -1;
 }
 /*** a Gauss elimináció még nem 100%-osan működő ***/
-void Matrix_Gauss(Matrix *m)
+Matrix* Matrix_Gauss(Matrix *m)
 {
-    int k = m->sor;
-    int n = m->oszlop;
+	Matrix *masol = Matrix_masol(m);
     int a;
-    for (int i = 0; i < k; ++i)
+    for (int i = 0; i < masol->sor; ++i)
     {
-        if (m->tomb[i][i] != 0)
+		printf("aktualis sor: %d\n", i);
+        if (masol->tomb[i][i] != 0)
         {
-            sorszoroz_helyben(m->tomb[i], n, 1/m->tomb[i][i]);
+            sorszoroz_helyben(masol->tomb[i], masol->oszlop, 1/masol->tomb[i][i]);
+            Matrix_kiir(masol);
         }
         else
         {
@@ -140,7 +141,7 @@ void Matrix_Gauss(Matrix *m)
             if (a > 0)
             {
                 Matrix_sorcsere_helyben(m, i, a);
-                sorszoroz_helyben(m->tomb[i], n, 1/m->tomb[i][i]);
+                sorszoroz_helyben(masol->tomb[i], masol->oszlop, 1/masol->tomb[i][i]);
             }
             else 
             {
@@ -148,23 +149,48 @@ void Matrix_Gauss(Matrix *m)
             }
         }
         
-        Matrix_kiir(*m);
-        for (int t = i + 1; t < k; ++t)
+        Matrix_kiir(masol);
+        for (int t = i + 1; t < masol->sor; ++t)
         {
             if (t == a)
                 continue;
-            double *bontosor = sorszoroz(m->tomb[i], n, -1*m->tomb[t][i]);
-            printf("   %lf    ->", -1*m->tomb[t][i]);
+            double *bontosor = sorszoroz(masol->tomb[i], masol->oszlop, -1*masol->tomb[t][i]);
+            printf("   %lf    ->", -1*masol->tomb[t][i]);
 			printf("\n");
-            for (int z = 0; z < n; ++z)
-                printf("%lf ", bontosor[z]);
-            sorosszead_helyben(m->tomb[t], bontosor, n);
+            //for (int z = 0; z < n; ++z)
+            //    printf("%lf ", bontosor[z]);
+            sorosszead_helyben(masol->tomb[t], bontosor, masol->oszlop);
             free(bontosor);
-            Matrix_kiir(*m);
+            printf("\n");
+            Matrix_kiir(masol);
         }
-        
     }
-
+    
+    //redukált lépcsős alakra hozás
+    double pivot, nullazando;
+    for (int i = (masol->sor)-1; i >= 0; --i)
+    {
+		Matrix_kiir(masol);
+		for (int j = (masol->oszlop)-1; j >= 0; --j)
+		{
+			if (i == j)
+			{
+				pivot = masol->tomb[i][j];
+				
+				for (int k = i - 1; k >= 0; k--)
+				{
+					double *bontosor = masol->tomb[i];
+					nullazando = masol->tomb[k][j];
+					bontosor = sorszoroz(bontosor, masol->oszlop, -nullazando);
+					sorosszead_helyben(masol->tomb[k], bontosor, masol->oszlop);
+					Matrix_kiir(masol);
+					free(bontosor);
+				}
+			}
+		}
+	}
+    //Matrix_memfelszab(masol);
+    return masol;
 }
 /** segédfüggvény a Gauss-eliminációhoz és a rang kiszámításához **/
 bool _nullasor(double *sor, int meret)

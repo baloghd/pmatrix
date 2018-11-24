@@ -35,8 +35,8 @@ int main()
 	
     
     //Matrix *gg = Matrix_fajlbol_olvas("TESZTMATRIX.mtrx");
-    Matrix *gg = Matrix_sztringbol_strtok("2,-1,6,12;2,2,3,24;6,-1,17,46;4,-1,13,32;", -1, -1);
-    Matrix_kiir(*gg);
+    /* Matrix *gg = Matrix_sztringbol_strtok("2,-1,6,12;2,2,3,24;6,-1,17,46;4,-1,13,32;", -1, -1);
+    Matrix_kiir(gg);
 
     FILE *output = fopen("TESZT_KI.mtrx", "w");
     Matrix_fajlba_ir(gg, output);
@@ -44,11 +44,18 @@ int main()
     
     Matrix *ff = Matrix_fajlbol_olvas("TESZT_KI.mtrx");
     Matrix *masolat = Matrix_masol(ff);
-    Matrix_kiir(*masolat);
+    Matrix_kiir(masolat);
+    
+    Matrix_Gauss(masolat);
     
     Matrix_memfelszab(masolat);
     Matrix_memfelszab(ff);
-    
+    */
+    //Matrix *A = Matrix_sztringbol_strtok("1,2,3;0,3,4;2,2,2;", -1, -1);
+    Matrix *A = Matrix_sztringbol_strtok("2,4,5,6;4,2,7,1;8,7,0,3;", -1, -1);
+    Matrix *redukalt_A = Matrix_Gauss(A);
+    Matrix_memfelszab(A);
+    Matrix_memfelszab(redukalt_A);
    
     
     return 0;

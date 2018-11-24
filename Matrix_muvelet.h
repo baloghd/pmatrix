@@ -19,7 +19,7 @@ void Matrix_sorcsere_helyben(Matrix *m, int egyiksor, int masiksor);
 
 void Matrix_oszlopcsere_helyben(Matrix *m, int egyikoszlop, int masikoszlop);
 
-void Matrix_Gauss(Matrix *m);
+Matrix *Matrix_Gauss(Matrix *m);
 
 Matrix *Matrix_osszead(Matrix m1, Matrix m2);
 

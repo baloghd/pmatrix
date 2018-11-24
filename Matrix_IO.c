@@ -11,30 +11,30 @@
 
 
 /** a kiírja a mátrixot **/
-void Matrix_kiir(Matrix m)
+void Matrix_kiir(Matrix *m)
 {
-    for (int i = 0; i < m.sor; ++i)
+    for (int i = 0; i < m->sor; ++i)
     {
-        for (int j = 0; j < m.oszlop; ++j)
+        for (int j = 0; j < m->oszlop; ++j)
         {
-             printf("%.2f ", m.tomb[i][j]);
+             printf("%.2f ", m->tomb[i][j]);
         }
         printf("\n");
     }
     printf("\n");
 }
 /** a kiírja a mátrixot Octave-nak is jó formátumban **/
-void Matrix_kiir_Octave(Matrix m)
+void Matrix_kiir_Octave(Matrix *m)
 {
     printf("[");
-    for (int i = 0; i < m.sor; ++i)
+    for (int i = 0; i < m->sor; ++i)
     {
-        for (int j = 0; j < m.oszlop; ++j)
+        for (int j = 0; j < m->oszlop; ++j)
         {
-            if (j < m.oszlop - 1)
-                printf("%f,", m.tomb[i][j]);
+            if (j < m->oszlop - 1)
+                printf("%f,", m->tomb[i][j]);
             else
-                printf("%f", m.tomb[i][j]);
+                printf("%f", m->tomb[i][j]);
         }
         printf(";");
     }
@@ -60,11 +60,9 @@ Matrix *Matrix_sztringbol_strtok(const char *Matrix_sztring, int arg_n_sor, int 
 		sor = strtok(m, sorelval);
 		while (sor != NULL)
 		{
-			
 			 sor = strtok(NULL, sorelval);
 			 n_sor++;
 		}
-		
 		oszlop = strtok(m, elval);
 		while (oszlop != NULL)
 		{
@@ -77,7 +75,7 @@ Matrix *Matrix_sztringbol_strtok(const char *Matrix_sztring, int arg_n_sor, int 
 		n_sor = arg_n_sor;
 		n_oszlop = arg_n_oszlop;
 	}
-
+	
 	Matrix *vissza = Matrix_inic(n_sor, n_oszlop);
     int iter_sor = 0, iter_oszlop = 0;
     sor = strtok_r(mcopy, sorelval, &sor_reent_ptr);
@@ -94,7 +92,6 @@ Matrix *Matrix_sztringbol_strtok(const char *Matrix_sztring, int arg_n_sor, int 
 		 iter_sor++;
 		 iter_oszlop = 0;
 	}
-	
 	free(m);
 	free(mcopy);
     return vissza;
@@ -216,7 +213,6 @@ void _fejlec_feldolgoz(char *fejlec,
 	{
 		token = strtok_r(NULL, header_elvalaszto, &strtok_r_reentr);
 	}
-	
 
 	//oszlopok száma
 	token = strtok_r(NULL, header_elvalaszto, &strtok_r_reentr);
