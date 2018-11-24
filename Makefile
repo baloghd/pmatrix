@@ -1,5 +1,9 @@
+INCLUDE=-I debugmalloc
+
+default: main
+
 main:
-	gcc *.c -o main
+	gcc -Wall *.c $(INCLUDE) -o main
 
 clean:
 	rm -f main

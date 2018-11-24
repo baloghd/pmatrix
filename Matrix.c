@@ -2,7 +2,7 @@
 #include <stdlib.h>
 
 #include "Matrix.h"
-#include "debugmalloc.h"
+//#include "./debugmalloc/debugmalloc.h"
 
 
 /** a Matrix struktúrának foglal helyet **/

@@ -27,6 +27,6 @@ Matrix *Matrix_szorzas(Matrix jobb, Matrix bal);
 
 bool _nullasor(double *sor, int meret);
 
-int Matrix_rang(const Matrix m);
+int Matrix_rang(Matrix *m);
 
 #endif

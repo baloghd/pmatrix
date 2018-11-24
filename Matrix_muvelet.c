@@ -6,8 +6,7 @@
 #include "Matrix.h"
 #include "Matrix_IO.h"
 #include "Matrix_muvelet.h"
-#include "debugmalloc.h"
-
+//#include "./debugmalloc/debugmalloc.h"
 
 /** megszorozza egy sor összes elemét egy számmal, új sort visszaadva **/
 double *sorszoroz(double *sor, int meret, double mivel)
@@ -189,19 +188,21 @@ bool _nullasor(double *sor, int meret)
 
 /**egyelőre redukált alakú mátrixot kapva adja vissza a rangját **/
 /** TODO: beépíteni az eliminációt **/
-int Matrix_rang(const Matrix m)
+int Matrix_rang(Matrix *m)
 {
+	Matrix *masol_m = Matrix_masol(m);
+	Matrix *redukalt_m = Matrix_Gauss(masol_m);
 	int rang = 0;
-	
 	//a nulla elemű mátrix rangja 0 
-	if (m.sor == 0 || m.oszlop == 0)
+	if (redukalt_m->sor == 0 || redukalt_m->oszlop == 0)
 		return rang;
-
-	for (int i = 0; i < m.sor; ++i)
+	for (int i = 0; i < redukalt_m->sor; ++i)
 	{
 		//ha a sor nem nullás sor, a rang eggyel növekszik
-		if (!_nullasor(m.tomb[i], m.oszlop))
+		if (!_nullasor(redukalt_m->tomb[i], redukalt_m->oszlop))
 			rang++;
 	}
+	Matrix_memfelszab(redukalt_m);
+	Matrix_memfelszab(masol_m);
 	return rang;
 } 

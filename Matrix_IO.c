@@ -7,8 +7,7 @@
 #include "config.h"
 #include "Matrix.h"
 #include "Matrix_IO.h"
-#include "debugmalloc.h"
-
+//#include "./debugmalloc/debugmalloc.h"
 
 /** a kiírja a mátrixot **/
 void Matrix_kiir(Matrix *m)
