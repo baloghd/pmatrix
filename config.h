@@ -1,12 +1,17 @@
-#define VERZIO 0.1
+//általános
+#define PMATRIX_VERZIO 1
+#define PMATRIX_ALVERZIO 0
 
-#ifndef SOR_ELVALASZTO
-#define SOR_ELVALASZTO ";"
+//IO
+#ifndef PMATRIX_SOR_ELVALASZTO
+#define PMATRIX_SOR_ELVALASZTO ";"
 #endif
 
-#ifndef OSZLOP_ELVALASZTO
-#define OSZLOP_ELVALASZTO ","
+#ifndef PMATRIX_OSZLOP_ELVALASZTO
+#define PMATRIX_OSZLOP_ELVALASZTO ","
 #endif
+
+
 
 
 

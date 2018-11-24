@@ -13,7 +13,7 @@ void Matrix_kiir(Matrix m)
     {
         for (int j = 0; j < m.oszlop; ++j)
         {
-             printf("%5.2f ", m.tomb[i][j]);
+             printf("%.2f ", m.tomb[i][j]);
         }
         printf("\n");
     }
@@ -161,17 +161,71 @@ Matrix Matrix_sztringbol_strtok(const char *Matrix_sztring)
  * 		#s			a mátrix sorai a fájlban is soronként vannak 
  * 
  * **/
-Matrix Matrix_fajlbol_olvas(FILE *fp)
+Matrix Matrix_fajlbol_olvas(char *fajlnev)
 {
+	/** a .mtrx kiterjesztésű fájloknak van fejléce **/ 
+	FILE *fp = fopen(fajlnev, "r");
+	
 	int meret = 0;
 	char buffer[512];
 	while (fscanf(fp, "%s", buffer) != EOF)
         meret++;
     fseek(fp, 0, SEEK_SET);
     
-    Matrix vissza = Matrix_inic(5 ,5);
+    int sor, oszlop;
+    Matrix_FAJLFORMATUM formatum;
+    
+    while (fgets(buffer, 512, fp))
+    {
+		if(strstr(buffer, "pmatrix"))
+		{
+			printf("in header\n");
+			
+			char *header = (char *) malloc(sizeof(char)*strlen(buffer));
+			strcpy(header, buffer);
 
+			_fejlec_feldolgoz(header, &sor, &oszlop, &formatum);
+			free(header);
+			printf("sor: %d, oszlop: %d\n");
+		}
+		else
+		{
+			printf("buffer: %s", buffer);
+		}
+    }
+    
+    Matrix vissza = Matrix_inic(5 ,5);
     return vissza;
+}
+
+void _fejlec_feldolgoz(char *fejlec,
+					  int *sor,
+					  int *oszlop,
+					  Matrix_FAJLFORMATUM *formatum)
+{
+	const char header_elvalaszto[2] = "_";
+	char *token, *strtok_r_reentr, *e;
+	
+	//a pmatrix jelzőt átugorjuk
+	token = strtok_r(fejlec, header_elvalaszto, &strtok_r_reentr);
+	
+	//verziószám
+	token = strtok_r(NULL, header_elvalaszto, &strtok_r_reentr);
+	
+	//formátumkód
+	token = strtok_r(NULL, header_elvalaszto, &strtok_r_reentr);
+	//alapértelmezetetten soronként
+	*formatum = MATRIX_FF_SORONKENT;
+	if (strcmp(token, "e"))
+		*formatum = MATRIX_FF_EGYSORBAN;
+		
+	//
+			
+		
+	
+	printf("%s", token);
+	
+	printf("\n");
 }
 
 void Matrix_fajlba_ir(FILE *fp)
