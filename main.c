@@ -7,7 +7,7 @@
 #include "Matrix.h"
 #include "Matrix_IO.h"
 #include "Matrix_muvelet.h"
-//#include "./debugmalloc/debugmalloc.h"
+#include "debugmalloc.h"
 
 int main()
 {
@@ -61,8 +61,15 @@ int main()
     Matrix_kiir(A);
     printf("A matrix redukált lépcsős alakja:\n");
     Matrix_kiir(redukalt_A);
-    printf("az A matrix rangja: %d\n", Matrix_rang(A));
-        
+    printf("az A matrix rangja: %d\n\n", Matrix_rang(A));
+    
+    Matrix *B = Matrix_sztringbol_strtok("1,2,3;4,0,6;7,8,9;", -1, -1);
+    Matrix *B_inverz = Matrix_inverz(B);
+    Matrix_kiir(B_inverz);
+
+    Matrix_memfelszab(B);
+    Matrix_memfelszab(B_inverz);
+    
     Matrix_memfelszab(A);
     Matrix_memfelszab(redukalt_A);
   

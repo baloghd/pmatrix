@@ -6,7 +6,7 @@
 #include "Matrix.h"
 #include "Matrix_IO.h"
 #include "Matrix_muvelet.h"
-//#include "./debugmalloc/debugmalloc.h"
+#include "debugmalloc.h"
 
 /** megszorozza egy sor összes elemét egy számmal, új sort visszaadva **/
 double *sorszoroz(double *sor, int meret, double mivel)
@@ -154,14 +154,14 @@ Matrix* Matrix_Gauss(Matrix *m)
         }
     }
     //redukált lépcsős alak
-    double pivot, nullazando;
+    double nullazando;
     for (int i = (masol->sor)-1; i >= 0; --i)
     {
 		for (int j = (masol->oszlop)-1; j >= 0; --j)
 		{
 			if (i == j)
 			{
-				pivot = masol->tomb[i][j];
+				//double pivot = masol->tomb[i][j];
 				for (int k = i - 1; k >= 0; k--)
 				{
 					double *bontosor = masol->tomb[i];
@@ -186,8 +186,6 @@ bool _nullasor(double *sor, int meret)
 	return true;
 }
 
-/**egyelőre redukált alakú mátrixot kapva adja vissza a rangját **/
-/** TODO: beépíteni az eliminációt **/
 int Matrix_rang(Matrix *m)
 {
 	Matrix *masol_m = Matrix_masol(m);
@@ -205,4 +203,51 @@ int Matrix_rang(Matrix *m)
 	Matrix_memfelszab(redukalt_m);
 	Matrix_memfelszab(masol_m);
 	return rang;
-} 
+}
+
+Matrix *Matrix_inverz(Matrix *m)
+{
+	assert((m->sor == m->oszlop) && "HIBA: csak négyzetes mátrixnak van inverze.");
+	Matrix *osszerak = Matrix_jobbra_hozzaad(m);
+	Matrix *eliminal = Matrix_Gauss(osszerak);
+	Matrix *inverz = Matrix_balrol_elvesz(eliminal);
+	
+	Matrix_memfelszab(osszerak);
+	Matrix_memfelszab(eliminal);
+	return inverz;
+}
+
+Matrix *Matrix_jobbra_hozzaad(Matrix *m)
+{
+	assert((m->sor == m->oszlop) && "HIBA: csak négyzetes mátrixokra működik.");
+	Matrix *egyseg = Matrix_egyseg(m->sor);
+	Matrix *osszerakott = Matrix_inic(m->sor, 2 * m->oszlop);
+	for (int i = 0; i < osszerakott->sor; ++i)
+	{
+		for (int j = 0; j < osszerakott->oszlop; ++j)
+		{
+			if (j >= m->oszlop)
+				osszerakott->tomb[i][j] = egyseg->tomb[i][j - m->oszlop];
+			else
+				osszerakott->tomb[i][j] = m->tomb[i][j];
+		}
+	}
+	Matrix_memfelszab(egyseg);
+	return osszerakott;
+}
+
+Matrix *Matrix_balrol_elvesz(Matrix *m)
+{
+	int vissza_oszlopok_szama = m->oszlop / 2;
+	Matrix *vissza = Matrix_inic(m->sor, vissza_oszlopok_szama);
+	for (int i = 0; i < m->sor; ++i)
+	{
+		for (int j = vissza_oszlopok_szama; j < m->oszlop; ++j)
+		{
+			vissza->tomb[i][j - vissza_oszlopok_szama] = m->tomb[i][j];	
+		}
+	}
+	return vissza;
+}
+
+

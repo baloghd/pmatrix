@@ -29,4 +29,9 @@ bool _nullasor(double *sor, int meret);
 
 int Matrix_rang(Matrix *m);
 
+Matrix *Matrix_inverz(Matrix *m);
+
+Matrix *Matrix_jobbra_hozzaad(Matrix *m);
+
+Matrix *Matrix_balrol_elvesz(Matrix *m);
 #endif
