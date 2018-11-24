@@ -9,6 +9,9 @@
 #include "Matrix_muvelet.h"
 #include "debugmalloc.h"
 
+#undef PMATRIX_TIZEDES_PRECIZIO_KIIRAS
+#define PMATRIX_TIZEDES_PRECIZIO_KIIRAS 4
+
 int main()
 {
     //Matrix k = Matrix_sztringbol("12, 3, 4, 5;1, 8.5, 3, 2;");
