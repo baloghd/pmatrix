@@ -165,7 +165,7 @@ void Matrix_Gauss(Matrix *m)
     }
 
 }
-
+/** segédfüggvény a Gauss-eliminációhoz és a rang kiszámításához **/
 bool _nullasor(double *sor, int meret)
 {
 	for (int i = 0; i < meret; ++i)
@@ -176,6 +176,8 @@ bool _nullasor(double *sor, int meret)
 	return true;
 }
 
+/**egyelőre redukált alakú mátrixot kapva adja vissza a rangját **/
+/** TODO: beépíteni az eliminációt **/
 int Matrix_rang(const Matrix m)
 {
 	int rang = 0;

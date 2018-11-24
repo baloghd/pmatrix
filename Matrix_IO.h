@@ -13,9 +13,9 @@ int match(const char *s, const char *p, int overlap);
 
 Matrix Matrix_sztringbol(char *sz);
 
-Matrix Matrix_sztringbol_strtok(char *sz);
+Matrix Matrix_sztringbol_strtok(const char *sz);
 
-Matrix Matrix_fajlbol(FILE *fp);
+Matrix Matrix_fajlbol_olvas(FILE *fp);
 
 #endif
 

@@ -98,13 +98,15 @@ Matrix Matrix_sztringbol(char *sz)
 }
 /** a Matrix_sztringből megvalósítása lesz sztringkezelő függvények
  * okosabb használatával **/
-Matrix Matrix_sztringbol_strtok(char *sz)
+Matrix Matrix_sztringbol_strtok(const char *Matrix_sztring)
 {
     char elval[2] = ",";
     char sorelval[2] = ";";
-    char m[500] = "1,1,2,2,1,-1;4,4,8,9,1,-7;2,5,13,1,26,10;1,3,8,2,11,1;2,1,1,2,3,3;";
-    char mcopy[500];
-    strcpy(mcopy, m);
+    char *m = (char *) malloc(sizeof(char) * strlen(Matrix_sztring));
+    char *mcopy = (char *) malloc(sizeof(char) * strlen(Matrix_sztring));
+    strcpy(m, Matrix_sztring);
+    strcpy(mcopy, Matrix_sztring);
+   
     char *sor, *oszlop, *sor_reent_ptr, *oszlop_reent_ptr;
     int n_sor = 0, n_oszlop = 0;
     
@@ -117,17 +119,14 @@ Matrix Matrix_sztringbol_strtok(char *sz)
 		 n_sor++;
 	}
 	
-    printf("%d sor \n", n_sor);
-   
     oszlop = strtok(m, elval);
-    
     while (oszlop != NULL)
     {
 		 //printf("%s ", oszlop);
 		 oszlop = strtok(NULL, elval);
 		 n_oszlop++;
 	}
-	printf("%d oszlop\n", n_oszlop);
+
 	Matrix vissza = Matrix_inic(n_sor, n_oszlop);
 	
     int iter_sor = 0, iter_oszlop = 0;
@@ -137,30 +136,46 @@ Matrix Matrix_sztringbol_strtok(char *sz)
 		 oszlop = strtok_r(sor, elval, &oszlop_reent_ptr);
 		 while (oszlop != NULL)
 		 {
-			printf("%s ", oszlop);
 			char *e;
-			//vissza.tomb[iter_sor][iter_oszlop] = strtod(oszlop, &e);
+			vissza.tomb[iter_sor][iter_oszlop++] = strtod(oszlop, &e);
 			oszlop = strtok_r(NULL, elval, &oszlop_reent_ptr);
-			iter_oszlop++;
 		 }
-		 printf("\n");
 		 sor = strtok_r(NULL, sorelval, &sor_reent_ptr);
 		 iter_sor++;
+		 iter_oszlop = 0;
 	}
-
+	
+	free(m);
+	free(mcopy);
     return vissza;
 }
 
-
-Matrix Matrix_fajlbol(FILE *fp)
+/** Matrix_fajlbol_olvas
+ * 
+ * fájlból olvas be mátrixot, a fájl fejlécének figyelembe vételével
+ *  ami az alábbi formátumban van:
+ * 		pmatrix<verzió>_<sorok száma>_<oszlopok száma>_<formátumkód>
+ * 			
+ * 	a valid formátumkódok:
+ * 		#e			egy sorban az egész mátrix definíció
+ * 		#s			a mátrix sorai a fájlban is soronként vannak 
+ * 
+ * **/
+Matrix Matrix_fajlbol_olvas(FILE *fp)
 {
 	int meret = 0;
 	char buffer[512];
 	while (fscanf(fp, "%s", buffer) != EOF)
         meret++;
     fseek(fp, 0, SEEK_SET);
+    
     Matrix vissza = Matrix_inic(5 ,5);
 
     return vissza;
+}
+
+void Matrix_fajlba_ir(FILE *fp)
+{
+	
 }
 
