@@ -31,9 +31,19 @@ int main()
 									PMATRIX_OSZLOP_ELVALASZTO);
 	*/
 	
-    Matrix gg = Matrix_fajlbol_olvas("TESZTMATRIX_egysor.mtrx");
-    //Matrix gg = Matrix_sztringbol_strtok("1,1,2,2,1,-1;4,4,8,9,1,-7;2,5,13,1,26,10;1,3,8,2,11,1;2,1,1,2,3,3;", -1, -1);
+    
+    Matrix gg = Matrix_fajlbol_olvas("TESZTMATRIX.mtrx");
     Matrix_kiir(gg);
+    printf("beolvasas 1. sikerult\n");
+    
+    FILE *output = fopen("TESZT_KI.mtrx", "w");
+    Matrix_fajlba_ir(gg, output);
+    printf("kiiras sikerult\n");
+    
     Matrix_memfelszab(&gg);
+    Matrix ff = Matrix_fajlbol_olvas("TESZT_KI.mtrx");
+    Matrix_kiir(ff);
+    printf("beolvasas 2. sikerult\n");
+    
     return 0;
 }

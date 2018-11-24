@@ -22,5 +22,7 @@ void _fejlec_feldolgoz(char *fejlec,
 					  int *sor,
 					  int *oszlop,
 					  Matrix_FAJLFORMATUM *formatum);  
+					  
+void Matrix_fajlba_ir(Matrix m, FILE *fp);
 #endif
 
