@@ -111,32 +111,27 @@ Matrix *Matrix_sztringbol_strtok(const char *Matrix_sztring, int arg_n_sor, int 
 	free(mcopy);
     return vissza;
 }
-
-void replace(char * o_string, char * s_string, char * r_string) {
-      //a buffer variable to do all replace things
+/*!
+ *  \brief segédfüggvény a fájlból való beolvasáshoz, rekurzív subsztring csere
+ *  \param honnan a vizsgált sztring
+ *  \param mit a cserélni kívánt részlet
+ *  \param mire az új részlet a _mit_ helyett
+ */
+void _sztring_csere(char *honnan, char *mit, char *mire) {
       char buffer[PMATRIX_BUFFER_MERET];
-      //to store the pointer returned from strstr
-      char *ch;
- 
-      //first exit condition
-      if(!(ch = strstr(o_string, s_string)))
+      char *strstr_jelzo = strstr(honnan, mit);
+      
+      if(strstr_jelzo == NULL)
               return;
- 
-      //copy all the content to buffer before the first occurrence of the search string
-      strncpy(buffer, o_string, ch-o_string);
- 
-      //prepare the buffer for appending by adding a null to the end of it
-      buffer[ch-o_string] = 0;
- 
-      //append using sprintf function
-      sprintf(buffer+(ch - o_string), "%s%s", r_string, ch + strlen(s_string));
- 
-      //empty o_string for copying
-      o_string[0] = 0;
-      strcpy(o_string, buffer);
-      //pass recursively to replace other occurrences
-      return replace(o_string, s_string, r_string);
- }
+              
+      int eddighossz = strstr_jelzo - honnan;
+      strncpy(buffer, honnan, eddighossz);
+      buffer[eddighossz] = '\0';
+      honnan[0] = '\0';
+      sprintf(buffer + eddighossz, "%s%s", mire, strstr_jelzo + strlen(mit));
+      strcpy(honnan, buffer);
+      return _sztring_csere(honnan, mit, mire);
+}
 
 /** 
  * \brief fájlból olvas be mátrixot \n
@@ -187,8 +182,8 @@ Matrix *Matrix_fajlbol_olvas(char *fajlnev)
 	else 
 	{
 		fread(buffer, sizeof(char), PMATRIX_BUFFER_MERET, fp);
-		replace(buffer, " ", PMATRIX_OSZLOP_ELVALASZTO);
-		replace(buffer, "\n", PMATRIX_SOR_ELVALASZTO);
+		_sztring_csere(buffer, " ", PMATRIX_OSZLOP_ELVALASZTO);
+		_sztring_csere(buffer, "\n", PMATRIX_SOR_ELVALASZTO);
 		vissza = Matrix_sztringbol_strtok(buffer, sor, oszlop);
 	}
     return vissza;
@@ -241,7 +236,13 @@ void _fejlec_feldolgoz(char *fejlec,
 		token = strtok_r(NULL, header_elvalaszto, &strtok_r_reentr);
 	}
 }
-
+/*!
+ *  \brief a mátrixot írja mtrx vagy csv fájlba
+	\param m a mátrix
+	\param fajlnev a kívánt fájlnév KITERJESZTÉS NÉLKÜL
+	\param fajlformatum a kiterjesztés: csv vagy mtrx
+	\param formatumkod e: egysorban az egész mátrix, s: minden sor külön sorban
+ */
 void Matrix_fajlba_ir(Matrix *m, char *fajlnev, char *fajlformatum, char *formatumkod)
 {
 	/* a mtrx fájl fejlécformátuma:
@@ -293,7 +294,6 @@ void Matrix_fajlba_ir(Matrix *m, char *fajlnev, char *fajlformatum, char *format
 		fclose(fp);
 		return;
 	}
-	
 	for (int i = 0; i < m->sor; ++i)
     {
         for (int j = 0; j < m->oszlop; ++j)
@@ -304,7 +304,6 @@ void Matrix_fajlba_ir(Matrix *m, char *fajlnev, char *fajlformatum, char *format
         }
 		fprintf(fp, "\n");
     }
-    
     free(tizedes_prec_ws);
 	fclose(fp);
 }
