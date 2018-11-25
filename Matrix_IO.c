@@ -18,7 +18,7 @@
 void Matrix_kiir(Matrix *m)
 {
 	char *formatum = (char *) malloc(sizeof(char)*10);
-	sprintf(formatum, "%%.%dlf ", PMATRIX_TIZEDES_PRECIZIO_KIIRAS);
+	sprintf(formatum, "%%4.%dlf ", PMATRIX_TIZEDES_PRECIZIO_KIIRAS);
     for (int i = 0; i < m->sor; ++i)
     {
         for (int j = 0; j < m->oszlop; ++j)

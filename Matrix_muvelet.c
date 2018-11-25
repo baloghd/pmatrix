@@ -133,7 +133,7 @@ Matrix *Matrix_osszead(Matrix m1, Matrix m2)
             t->tomb[i][j] = m1.tomb[i][j] + m2.tomb[i][j];
         }
     }
-
+	_nulla_check(t);
     return t;
 }
 /*!
@@ -160,9 +160,14 @@ Matrix *Matrix_szorzas(Matrix jobb, Matrix bal)
             szorzat->tomb[i][j] = sum;
         }
     }
+    _nulla_check(szorzat);
     return szorzat;
 }
-
+/*!
+ *  \brief transzponál egy mátrixot
+ *  \param m a mátrix
+ *  \return a transzponált mátrix
+ */
 Matrix *Matrix_transzponal(Matrix *m)
 {
 	Matrix *m_T = Matrix_inic(m->sor, m->oszlop);
@@ -174,6 +179,23 @@ Matrix *Matrix_transzponal(Matrix *m)
 		}
 	}
 	return m_T;
+}
+
+void _double_normalizal(double *szam)
+{
+	if (_double_egyenlo(0.0, *szam))
+		*szam = 0.0;
+}
+
+void _nulla_check(Matrix *m)
+{
+	for (int i = 0; i < m->sor; ++i)
+    {
+        for (int j = 0; j < m->oszlop; ++j)
+        {
+			_double_normalizal(&m->tomb[i][j]);
+		}
+	}
 }
 
 /*!

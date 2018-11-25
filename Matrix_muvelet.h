@@ -29,6 +29,10 @@ Matrix *Matrix_szorzas(Matrix jobb, Matrix bal);
 
 Matrix *Matrix_transzponal(Matrix *m);
 
+void _double_normalizal(double *szam);
+
+void _nulla_check(Matrix *m);
+
 bool _nullasor(double *sor, int meret);
 
 int Matrix_rang(Matrix *m);
