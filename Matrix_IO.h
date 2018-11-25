@@ -17,7 +17,6 @@ typedef enum Matrix_FAJLFORMATUM {
 	MATRIX_FF_SORONKENT
 } Matrix_FAJLFORMATUM;
 
-
 void Matrix_kiir(Matrix *m);
 
 void Matrix_kiir_Octave(Matrix *m);
@@ -31,6 +30,6 @@ void _fejlec_feldolgoz(char *fejlec,
 					  int *oszlop,
 					  Matrix_FAJLFORMATUM *formatum);  
 					  
-void Matrix_fajlba_ir(Matrix *m, FILE *fp);
+void Matrix_fajlba_ir(Matrix *m, char *fajlnev, char *fajlformatum, char *formatumkod);
 #endif
 

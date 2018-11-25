@@ -349,8 +349,6 @@ double Matrix_determinans(Matrix *m)
 	Matrix_memfelszab(felso);
 	return vissza;
 	}
-
-
 /*!
  *  \brief segédfüggvény determináns-számításhoz, egy mátrix főátlójának szorzata
  *  \param m a mátrix
@@ -358,7 +356,7 @@ double Matrix_determinans(Matrix *m)
  */
 double _Matrix_det_foatlo_szorzas(Matrix *m)
 {
-    //assert(m->sor == m->oszlop);
+    assert(m->sor == m->oszlop);
     double det = 1;
     for (int i = 0; i < m->sor; ++i)
     {
@@ -371,12 +369,10 @@ double _Matrix_det_foatlo_szorzas(Matrix *m)
  *  \param m a szetszedendo matrix
  * 	\param also egy egysegmatrixra mutato pointer, ami also
  *  haromszogmatrix lesz ha lefut a fuggveny
- *  \param masol egy inicializalt matrixs
+ *  \param masol egy inicializalt matrix
  */
 void LU_dekomp(Matrix m, Matrix *also, Matrix *masol)
 {
-	//Matrix *masol = Matrix_masol(&m);
-    //int a;
     for (int i = 0; i < masol->sor; ++i)
     {
         if (masol->tomb[i][i] != 0)
@@ -396,20 +392,13 @@ void LU_dekomp(Matrix m, Matrix *also, Matrix *masol)
                 continue;
             }*/
         }
-        //Matrix_kiir(masol);
         for (int t = i + 1; t < masol->sor; ++t)
         {
-            
-            /* if (t == a)
-                continue; */
-			//printf("pivot: %lf\n", masol->tomb[t][i]); 
             double *bontosor = sorszoroz(masol->tomb[i], masol->oszlop, -(masol->tomb[t][i]/masol->tomb[i][i]));
             //printf("számok: %lf %lf együttható: %lf\n", masol->tomb[t][i], masol->tomb[i][i], masol->tomb[t][i]/masol->tomb[i][i]);
             also->tomb[t][i] = masol->tomb[t][i]/masol->tomb[i][i];
             sorosszead_helyben(masol->tomb[t], bontosor, masol->oszlop);
             free(bontosor);
-            //Matrix_kiir(masol); 
         }
-        //printf("2. loop vege\n");
     }
 }

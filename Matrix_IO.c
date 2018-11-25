@@ -142,7 +142,7 @@ void replace(char * o_string, char * s_string, char * r_string) {
  * \brief fájlból olvas be mátrixot \n
  * 
  * a fájl fejlécének figyelembe vételével 
- *  ami az alábbi formátumban van: \n
+ * ami az alábbi formátumban van: \n
  * 		pmatrix_\<verzió\>_\<formátumkód\>_\<sorok száma\>_(opcionális sorelválasztó definíció)_\<oszlopok száma\>_(opcionális oszlopelválasztó definíció)
  * 			
  * 	valid formátumkódok: \n
@@ -193,7 +193,14 @@ Matrix *Matrix_fajlbol_olvas(char *fajlnev)
 	}
     return vissza;
 }
-
+/*!
+ *  \brief segédfüggvény a mátrix fájlból való olvasásához
+ *  \param fejlec a fájlból beolvasó függvénytől kapott fejléc
+ *  \param sor pointer, ide kerül vissza a függvényből kinyert sorok száma érték
+ *  \param oszlop pointer, ide kerül vissza a függvényből kinyert oszlopok száma érték
+ *  \param formatum pointer, ide kerül vissza a fájlformátum
+ * 	\return a beolvasott mátrix struktúra
+ */
 void _fejlec_feldolgoz(char *fejlec,
 					  int *sor,
 					  int *oszlop,
@@ -234,10 +241,10 @@ void _fejlec_feldolgoz(char *fejlec,
 		token = strtok_r(NULL, header_elvalaszto, &strtok_r_reentr);
 	}
 }
-#define FORMATUMKOD "s"
-void Matrix_fajlba_ir(Matrix *m, FILE *fp)
+
+void Matrix_fajlba_ir(Matrix *m, char *fajlnev, char *fajlformatum, char *formatumkod)
 {
-	/* fejléc, formátuma:
+	/* a mtrx fájl fejlécformátuma:
 	 pmatrix_<v>_<ff>_<sor>_(<OPCIONÁLIS: egy_sor>)_<oszlop>_(<OPCIONÁLIS: egy_oszl>)
 				v: pmatrix verzió
 			   ff: fájlformátum kód
@@ -245,19 +252,48 @@ void Matrix_fajlba_ir(Matrix *m, FILE *fp)
 	      egy_sor: egyedi sorelválasztó karakter
 	       oszlop: oszlopok száma
 	     egy_oszl: egyedi oszlopelválasztó karakter
-	 * 
 	 */
+	char *nev_es_formatum = (char *) malloc(sizeof(char)*(strlen(fajlnev) + strlen(fajlformatum) + 2));
+	sprintf(nev_es_formatum, "%s.%s", fajlnev, fajlformatum);
+	FILE *fp = fopen(nev_es_formatum, "w");
+	free(nev_es_formatum);
 	char tizedes_prec[9];
 	char *tizedes_prec_ws = (char *) malloc(sizeof(char)*10);
 	sprintf(tizedes_prec, "%%.%dlf", PMATRIX_TIZEDES_PRECIZIO_FAJLBAIRAS);
 	strcpy(tizedes_prec_ws, tizedes_prec);
 	strcat(tizedes_prec_ws, " ");
 	
-	//a fájl fejléce
-	fprintf(fp, "pmatrix_%s_%s_%d_%d_\n", PMATRIX_VERZIO,
-										  FORMATUMKOD,
-										  m->sor,
-										  m->oszlop);
+	if (strcmp(fajlformatum, "mtrx") == 0)
+	{
+		//a fájl fejléce
+		if (strcmp(formatumkod, "e") == 0)
+		{
+			fprintf(fp, "pmatrix_%s_%s_%d__%d__\n",   PMATRIX_VERZIO,
+													  formatumkod,
+													  m->sor,
+													  m->oszlop);
+		}
+		else 
+		{
+			//ha nem egy sorban akarjuk a fajlba kiirni, akkor alapértelmezett
+			fprintf(fp, "pmatrix_%s_%s_%d__%d__\n",   PMATRIX_VERZIO,
+													  formatumkod,
+													  m->sor,
+													  m->oszlop);
+		}
+	}
+	else if (strcmp(fajlformatum, "csv") == 0)
+	{
+		//placeholder, üres
+	}
+	else
+	{
+		printf("HIBA: nem ismert formátum (a lehetséges formátumok: mtrx, csv)\n");
+		free(tizedes_prec_ws);
+		fclose(fp);
+		return;
+	}
+	
 	for (int i = 0; i < m->sor; ++i)
     {
         for (int j = 0; j < m->oszlop; ++j)
@@ -266,9 +302,9 @@ void Matrix_fajlba_ir(Matrix *m, FILE *fp)
 			//ha nem az, rakunk whitespace-t utána, ha az, akkor nem
 			fprintf(fp, j < m->oszlop - 1 ? tizedes_prec_ws : tizedes_prec, m->tomb[i][j]);
         }
-        if (i < m->sor - 1)
-			fprintf(fp, "\n");
+		fprintf(fp, "\n");
     }
+    
     free(tizedes_prec_ws);
 	fclose(fp);
 }

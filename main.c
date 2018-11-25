@@ -22,15 +22,6 @@ int main()
     //Matrix rref_gg = Matrix_sztringbol("1,2,1;0,1,2;0,0,0;");
     //printf("a rref_gg rangja: %d\n", Matrix_rang(rref_gg));
     
- 
-    
-    /* printf("pmatrix_%d.%d_%s_%s_§", PMATRIX_VERZIO,
-									PMATRIX_ALVERZIO,
-									PMATRIX_SOR_ELVALASZTO,
-									PMATRIX_OSZLOP_ELVALASZTO);
-	*/
-	
-    
     //Matrix *gg = Matrix_fajlbol_olvas("TESZTMATRIX.mtrx");
     /* Matrix *gg = Matrix_sztringbol_strtok("2,-1,6,12;2,2,3,24;6,-1,17,46;4,-1,13,32;", -1, -1);
     Matrix_kiir(gg);
@@ -85,8 +76,7 @@ int main()
 	Matrix_kiir(D_elim);
 	printf("det(D): %lf\n", Matrix_determinans(D));
 	
-	FILE *output = fopen("D_gaussd.mtrx", "w");
-	Matrix_fajlba_ir(D_elim, output);
+	Matrix_fajlba_ir(D_elim, "D_gauss_uj", "csv", "s");
 
 	Matrix_memfelszab(D);
 	Matrix_memfelszab(D_elim);
