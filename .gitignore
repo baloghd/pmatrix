@@ -58,9 +58,10 @@ dkms.conf
 *.mk
 *.project
 *.txt
-Release/*
+Release/
 
-
+html/
+latex/
 pmatrix.zip
 main
 # End of https://www.gitignore.io/api/c

@@ -36,4 +36,10 @@ Matrix *Matrix_inverz(Matrix *m);
 Matrix *Matrix_jobbra_hozzaad(Matrix *m);
 
 Matrix *Matrix_balrol_elvesz(Matrix *m);
+
+//double Matrix_determinans_2x2(Matrix *m);
+
+double _Matrix_det_foatlo_szorzas(Matrix *m);
+
+void LU_dekomp(Matrix m, Matrix *also, Matrix *felso);
 #endif

@@ -10,7 +10,14 @@
 
 /*! \file */ 
 
-/** megszorozza egy sor összes elemét egy számmal, új sort visszaadva **/
+/*!
+ *  \brief megszorozza egy sor összes elemét egy számmal, új sort visszaadva
+ *  \param sor a szorzandó double tömb
+ * 	\param meret a tömb mérete
+ *  \param mivel a szorzó
+ * 	\return a megszorzott tömbre mutató, újonnan lefoglalt memóriaterületre
+ * 	mutató pointer
+ */
 double *sorszoroz(double *sor, int meret, double mivel)
 {
     double *vissza = (double *) malloc(meret * sizeof(double));
@@ -20,7 +27,13 @@ double *sorszoroz(double *sor, int meret, double mivel)
     }
     return vissza;
 }
-/** megszorozza egy paraméterként kapott sor összes elemét egy számmal**/
+
+/*!
+ *  \brief megszorozza egy sor összes elemét egy számmal, helyben
+ *  \param sor a szorzandó double tömb
+ * 	\param meret a tömb mérete
+ *  \param mivel a szorzó
+ */
 void sorszoroz_helyben(double *sor, int meret, double mivel)
 {
     for (int i = 0; i < meret; ++i)
@@ -28,7 +41,13 @@ void sorszoroz_helyben(double *sor, int meret, double mivel)
         sor[i] *= mivel;
     }
 }
-/** összeadja egy paraméterként kapott sor összes elemét egy számmal**/
+/*!
+ *  \brief hozzáad egy sort egy másik sorhoz, új sort visszaadva
+ *  \param sor1 az összeadás egyik tagja
+ * 	\param sor2 az összeadás másik tagja
+ * 	\param meret a tömb mérete
+ * 	\return az újonnan lefoglalt memóriaterületre mutató pointer
+ */
 double *sorosszead(double *sor1, double *sor2, int meret)
 {
     double *vissza = (double *) malloc(meret * sizeof(double));
@@ -38,7 +57,12 @@ double *sorosszead(double *sor1, double *sor2, int meret)
     }
     return vissza;
 }
-/** összeadja egy paraméterként kapott sor összes elemét egy számmal**/
+/*!
+ *  \brief egy sorhoz ad egy másikat, helyben
+ *  \param sor1 amihez adunk
+ * 	\param sor2 amit 
+ *  \param meret a sorok mérete
+ */
 void sorosszead_helyben(double *sor1, double *sor2, int meret)
 {
     for (int i = 0; i < meret; ++i)
@@ -46,7 +70,11 @@ void sorosszead_helyben(double *sor1, double *sor2, int meret)
         sor1[i] += sor2[i];
     }
 }
-/*** http://mathworld.wolfram.com/MatrixTrace.html ***/
+/*!
+ *  \brief egy mátrix főátlójának összege, _nyom_
+ *  \param m a mátrix
+ * 	\return a főátló összege
+ */
 double Matrix_nyom(Matrix *m)
 {
     assert(m->sor == m->oszlop);
@@ -57,14 +85,24 @@ double Matrix_nyom(Matrix *m)
     }
     return nyom;
 }
-/** megcseréli egy paraméterként kapott mátrix megadott sorait (0-tól indexelve) **/
+/*!
+ *  \brief megcseréli egy paraméterként kapott mátrix megadott sorait (0-tól indexelve)
+ *  \param m a mátrix
+ *  \param egyiksor az egyik megcserélendő sor
+ * 	\param másiksor a másik megcserélendő sor
+ */
 void Matrix_sorcsere_helyben(Matrix *m, int egyiksor, int masiksor)
 {
     double *tarolo = m->tomb[egyiksor];
     m->tomb[egyiksor] = m->tomb[masiksor];
     m->tomb[masiksor] = tarolo;
 }
-/** megcseréli egy paraméterként kapott mátrix megadott oszlopait (0-tól indexelve) **/
+/*!
+ *  \brief megcseréli egy paraméterként kapott mátrix megadott oszlopait (0-tól indexelve) 
+ *  \param m a mátrix
+ *  \param egyikoszlop az egyik megcserélendő oszlop
+ * 	\param másikoszlop a másik megcserélendő oszlop
+ */
 void Matrix_oszlopcsere_helyben(Matrix *m, int egyikoszlop, int masikoszlop)
 {
     for (int i = 0; i < m->sor; ++i)
@@ -74,7 +112,12 @@ void Matrix_oszlopcsere_helyben(Matrix *m, int egyikoszlop, int masikoszlop)
         m->tomb[i][masikoszlop] = tarolo;
     }
 }
-/** összead két mátrixot **/
+/*!
+ *  \brief összead két mátrixot
+ *  \param m1 az összeadás jobb oldala
+ *  \param m2 az összeadás bal oldala
+ *  \return az eredmény mátrixára mutató pointer (újonnan lefoglalt terület)
+ */
 Matrix *Matrix_osszead(Matrix m1, Matrix m2)
 {
     assert(((m1.sor == m2.sor) && (m2.oszlop == m2.oszlop)) && "HIBA: csak azonos meretu Matrixok adhatoak ossze.");
@@ -91,7 +134,12 @@ Matrix *Matrix_osszead(Matrix m1, Matrix m2)
 
     return t;
 }
-/** megszoroz két mátrixot **/
+/*!
+ *  \brief megszoroz két mátrixot
+ *  \param jobb az összeadás jobb oldala
+ *  \param bal az összeadás bal oldala
+ *  \return az eredmény mátrixára mutató pointer (újonnan lefoglalt terület)
+ */
 Matrix *Matrix_szorzas(Matrix jobb, Matrix bal)
 {
     assert(((jobb.sor == bal.oszlop) && (jobb.oszlop == bal.sor)) && "HIBA: szorzando Matrixok dimenzioira igaznak kell lennie, hogy [i x j] * [j x i]");
@@ -112,7 +160,13 @@ Matrix *Matrix_szorzas(Matrix jobb, Matrix bal)
     }
     return szorzat;
 }
-/** segédfüggvény a Gauss-eliminációhoz **/
+/*!
+ *  \brief segédfüggvény a Gauss-eliminációhoz
+ *  \param m a mátrix
+ *  \param kezdosor az első sor, amitől lefelé vizsgálódunk (ahol a pivot elem van éppen)
+ *  \return a megtalált, a pivot alatt nem 0 elemet tartalmazó sor indexe, ha van ilyen\n
+ * 	különben a sikertelen keresést jelző -1
+ */
 int _van_meg_nemnulla_sor(Matrix m, int kezdosor)
 {
     for (int i = kezdosor + 1; i < m.sor; ++i)
@@ -122,7 +176,12 @@ int _van_meg_nemnulla_sor(Matrix m, int kezdosor)
     }
     return -1;
 }
-/*** a Gauss elimináció még nem 100%-osan működő ***/
+/*!
+ *  \brief Gauss-elimináció implementáció
+ *  \param m a mátrix
+ *  \return az eliminált mátrix
+ * TODO: lépcsős / redukált lépcsős alak választás
+ */
 Matrix* Matrix_Gauss(Matrix *m)
 {
 	Matrix *masol = Matrix_masol(m);
@@ -177,7 +236,13 @@ Matrix* Matrix_Gauss(Matrix *m)
 	}
     return masol;
 }
-/** segédfüggvény a Gauss-eliminációhoz és a rang kiszámításához **/
+/*!
+ *  \brief segédfüggvény a Gauss-eliminációhoz és a rang kiszámításához
+ *  \param sor a vizsgált tömb
+ *  \param meret a sor (tömb) mérete
+ *  \return _true_: ha a sor csak 0-t tartalmaz \n _false_: egyébként
+ * 
+ */
 bool _nullasor(double *sor, int meret)
 {
 	for (int i = 0; i < meret; ++i)
@@ -187,7 +252,11 @@ bool _nullasor(double *sor, int meret)
 	}
 	return true;
 }
-
+/*!
+ *  \brief egy mátrix rangját számítja ki
+ *  \param m a mátrix
+ *  \return a mátrix sorrangja (= oszloprang = determinánsrang)
+ */
 int Matrix_rang(Matrix *m)
 {
 	Matrix *masol_m = Matrix_masol(m);
@@ -206,7 +275,11 @@ int Matrix_rang(Matrix *m)
 	Matrix_memfelszab(masol_m);
 	return rang;
 }
-
+/*!
+ *  \brief egy mátrix inverzét adja vissza
+ *  \param m a mátrix
+ *  \return a mátrix inverzére mutató pointer
+ */
 Matrix *Matrix_inverz(Matrix *m)
 {
 	assert((m->sor == m->oszlop) && "HIBA: csak négyzetes mátrixnak van inverze.");
@@ -218,7 +291,11 @@ Matrix *Matrix_inverz(Matrix *m)
 	Matrix_memfelszab(eliminal);
 	return inverz;
 }
-
+/*!
+ *  \brief segédfüggvény az inverz kiszámításához
+ *  \param m a mátrix
+ *  \return az eredeti mátrix és egy melléírt, azonos méretű egységmátrix
+ */
 Matrix *Matrix_jobbra_hozzaad(Matrix *m)
 {
 	assert((m->sor == m->oszlop) && "HIBA: csak négyzetes mátrixokra működik.");
@@ -237,7 +314,12 @@ Matrix *Matrix_jobbra_hozzaad(Matrix *m)
 	Matrix_memfelszab(egyseg);
 	return osszerakott;
 }
-
+/*!
+ *  \brief segédfüggvény az inverz kiszámításához
+ *  \param m egy, balról az egységmátrixot, jobbról
+ *  az eliminációval megtalált inverzet tartalmazó mátrix
+ *  \return a mátrix "jobb fele", azaz az eredeti mátrix inverze
+ */
 Matrix *Matrix_balrol_elvesz(Matrix *m)
 {
 	int vissza_oszlopok_szama = m->oszlop / 2;
@@ -252,4 +334,81 @@ Matrix *Matrix_balrol_elvesz(Matrix *m)
 	return vissza;
 }
 
+/* double Matrix_determinans_2x2(Matrix *m)
+{
+	return m->tomb[0][0]*m->tomb[1][1] - m->tomb[0][1]*m->tomb[1][0];
+}
 
+double Matrix_det_rek(Matrix *m)
+{
+	if (m->sor == 2 && m->oszlop == 2)
+		return m->tomb[0][0]*m->tomb[1][1] - m->tomb[0][1]*m->tomb[1][0];
+	
+	else if (m->sor == 3 && m->oszlop == 3)
+	{
+		return m->tomb[0][1]*Matrix_determinans_2x2(*m);
+	}
+}
+*/
+
+/*!
+ *  \brief egy mátrix főátlójának összege, _nyom_
+ *  \param m a mátrix
+ * 	\return a főátló összege
+ */
+double _Matrix_det_foatlo_szorzas(Matrix *m)
+{
+    assert(m->sor == m->oszlop);
+    double det = 1;
+    for (int i = 0; i < m->sor; ++i)
+    {
+        det *= m->tomb[i][i];
+    }
+    return det;
+}
+
+void LU_dekomp(Matrix m, Matrix *also, Matrix *masol)
+{
+	//Matrix *masol = Matrix_masol(&m);
+    //int a;
+    for (int i = 0; i < masol->sor; ++i)
+    {
+        if (masol->tomb[i][i] != 0)
+        {
+            //sorszoroz_helyben(masol->tomb[i], masol->oszlop, 1/masol->tomb[i][i]);
+        }
+        else
+        {
+            /*a = _van_meg_nemnulla_sor(*m, i);
+            if (a > 0)
+            {
+                Matrix_sorcsere_helyben(m, i, a);
+                sorszoroz_helyben(masol->tomb[i], masol->oszlop, 1/masol->tomb[i][i]);
+            }
+            else 
+            {
+                continue;
+            }*/
+        }
+        //Matrix_kiir(masol);
+        for (int t = i + 1; t < masol->sor; ++t)
+        {
+            
+            /* if (t == a)
+                continue; */
+			//printf("pivot: %lf\n", masol->tomb[t][i]); 
+            double *bontosor = sorszoroz(masol->tomb[i], masol->oszlop, -(masol->tomb[t][i]/masol->tomb[i][i]));
+            //printf("számok: %lf %lf együttható: %lf\n", masol->tomb[t][i], masol->tomb[i][i], masol->tomb[t][i]/masol->tomb[i][i]);
+            also->tomb[t][i] = masol->tomb[t][i]/masol->tomb[i][i];
+            sorosszead_helyben(masol->tomb[t], bontosor, masol->oszlop);
+            free(bontosor);
+            //Matrix_kiir(masol); 
+        }
+        //printf("2. loop vege\n");
+    }
+    
+    
+    //printf("másol:\n");
+    //Matrix_kiir(masol); 
+    //Matrix_memfelszab(masol);
+}
