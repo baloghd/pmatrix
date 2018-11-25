@@ -8,7 +8,8 @@ A modularitást szem előtt tartva pmatrix több fejlécből épül fel. Ezek:
 - *Matrix.h*: a könyvtár alapját képező Matrix struktúrát, létrehozását és a dinamikus memória kezelését leíró függvényeket tartalmazza
 - *Matrix_IO.h*: a Matrix struktúrák beolvasását, kiírását leíró függvények
   - a be- és kimeneti fájlformátum tetszőleges elválasztókarakterrel használható, alapértelmezésben pontosvessző
-  - a be- és kimenet lényegében fejléc nélküli csv fájl
+  - a be- és kimenet lehet .mtrx kiterjesztésű fájl, vagy szabványos csv
+  - a .mtrx kiterjesztés egy, a függvénykönyvtár által kezelt fejlécet ad az adatokhoz, melyben szerepel a sorok és az oszlopok száma is
   - a sztring kimenet alapértelmezésben kompatibilis a Matlab/Octave formátummal
     - pl. a 2x2-es identitásmátrix = [1, 0; 0,1;]
 - *Matrix_muvelet.h*: a Matrixokon végrehajtható műveleteket tárolja
