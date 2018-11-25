@@ -122,7 +122,7 @@ void Matrix_oszlopcsere_helyben(Matrix *m, int egyikoszlop, int masikoszlop)
  */
 Matrix *Matrix_osszead(Matrix m1, Matrix m2)
 {
-    assert(((m1.sor == m2.sor) && (m2.oszlop == m2.oszlop)) && "HIBA: csak azonos meretu Matrixok adhatoak ossze.");
+    assert(((m1.sor == m2.sor) && (m1.oszlop == m2.oszlop)) && "HIBA: csak azonos meretu Matrixok adhatoak ossze.");
     
     Matrix *t = Matrix_inic(m1.sor, m1.oszlop);
 
@@ -180,13 +180,19 @@ Matrix *Matrix_transzponal(Matrix *m)
 	}
 	return m_T;
 }
-
+/*!
+ *  \brief a double pontatlanságait kiküszöbölő esztétikai függvény (a -0.0000000 elkerülésére)
+ *  \param szam pointer egy double értékre
+ */
 void _double_normalizal(double *szam)
 {
 	if (_double_egyenlo(0.0, *szam))
 		*szam = 0.0;
 }
-
+/*!
+ *  \brief a _double_normalizal függvényt alkalmazza egy mátrixra
+	\param m egy mátrix
+ */
 void _nulla_check(Matrix *m)
 {
 	for (int i = 0; i < m->sor; ++i)

@@ -186,6 +186,7 @@ Matrix *Matrix_fajlbol_olvas(char *fajlnev)
 		_sztring_csere(buffer, "\n", PMATRIX_SOR_ELVALASZTO);
 		vissza = Matrix_sztringbol(buffer, sor, oszlop);
 	}
+	fclose(fp);
     return vissza;
 }
 /*!
