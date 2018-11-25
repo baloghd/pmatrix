@@ -11,7 +11,10 @@
 
 /*! \file */ 
 
-/** a kiírja a mátrixot **/
+/*!
+ *  \brief a kiírja a mátrixot
+ *  \param m a mátrix
+ */
 void Matrix_kiir(Matrix *m)
 {
 	char *formatum = (char *) malloc(sizeof(char)*10);
@@ -28,7 +31,10 @@ void Matrix_kiir(Matrix *m)
     printf("\n");
     free(formatum);
 }
-/** a kiírja a mátrixot Octave-nak is jó formátumban **/
+/*!
+ *  \brief a kiírja a mátrixot Octave-kombatibilis formátumban
+ *  \param m a mátrix
+ */
 void Matrix_kiir_Octave(Matrix *m)
 {
     printf("[");
@@ -45,9 +51,13 @@ void Matrix_kiir_Octave(Matrix *m)
     }
     printf("]\n");
 }
-
-/** a Matrix_sztringből megvalósítása lesz sztringkezelő függvények
- * okosabb használatával **/
+/*!
+ *  \brief sztringből olvas be mátrixot
+ *  \param Matrix_sztring a mátrixot tartalmazó sztring
+ *  \param arg_n_sor ha tudjuk a mátrix sorainak számát \n ha nem, -1
+ *  \param arg_n_oszlop ha tudjuk a mátrix oszlopainak számát \n ha nem, -1
+ * 	\return a beolvasott mátrix struktúra
+ */
 Matrix *Matrix_sztringbol_strtok(const char *Matrix_sztring, int arg_n_sor, int arg_n_oszlop)
 {
     char elval[2] = PMATRIX_OSZLOP_ELVALASZTO;
@@ -57,7 +67,7 @@ Matrix *Matrix_sztringbol_strtok(const char *Matrix_sztring, int arg_n_sor, int 
     strcpy(m, Matrix_sztring);
     strcpy(mcopy, Matrix_sztring);
    
-    char *sor, *oszlop, *sor_reent_ptr, *oszlosp_reent_ptr;
+    char *sor, *oszlop, *sor_reent_ptr, *oszlop_reent_ptr;
     int n_sor = 0, n_oszlop = 0;
     if (arg_n_sor == -1 || arg_n_oszlop == -1)
     {
@@ -128,33 +138,34 @@ void replace(char * o_string, char * s_string, char * r_string) {
       return replace(o_string, s_string, r_string);
  }
 
-/** Matrix_fajlbol_olvas
+/** 
+ * \brief fájlból olvas be mátrixot \n
  * 
- * fájlból olvas be mátrixot, a fájl fejlécének figyelembe vételével
- *  ami az alábbi formátumban van:
- * 		pmatrix<verzió>_<formátumkód>_<sorok száma>_(opcionális sorelválasztó definíció)_<oszlopok száma>_(opcionális oszlopelválasztó definíció)
+ * a fájl fejlécének figyelembe vételével 
+ *  ami az alábbi formátumban van: \n
+ * 		pmatrix_\<verzió\>_\<formátumkód\>_\<sorok száma\>_(opcionális sorelválasztó definíció)_\<oszlopok száma\>_(opcionális oszlopelválasztó definíció)
  * 			
- * 	a valid formátumkódok:
- * 		e			egy sorban az egész mátrix definíció
- * 		s			a mátrix sorai a fájlban is soronként vannak 
- * 
+ * 	valid formátumkódok: \n
+ * 		**e**:\t egy sorban az egész mátrix definíció \n
+ * 		**s**:\t a mátrix sorai a fájlban is soronként vannak \n
+ *  \param fajlnev a mátrixot tartalmazó fájl neve
+ *  \return a beolvasott mátrix struktúra
  * **/
 Matrix *Matrix_fajlbol_olvas(char *fajlnev)
 {
-	/** a .mtrx kiterjesztésű fájloknak van fejléce **/ 
+	/* a .mtrx kiterjesztésű fájloknak van fejléce */ 
 	FILE *fp = fopen(fajlnev, "r");
     char buffer[PMATRIX_BUFFER_MERET];
     
     int sor = 0, oszlop = 0;
     Matrix_FAJLFORMATUM formatum;
-    while (fgets(buffer, PMATRIX_BUFFER_MERET, fp) )
+    while (fgets(buffer, PMATRIX_BUFFER_MERET, fp))
     {
 		if(strstr(buffer, "pmatrix"))
 		{
 			char *header = (char *) malloc(sizeof(char)*(strlen(buffer) + 1));
 			strcpy(header, buffer);
 			_fejlec_feldolgoz(header, &sor, &oszlop, &formatum);
-			//printf("sor:%d\noszlop:%d\nformatum:%d\n", sor, oszlop, formatum);
 			free(header);
 			break;
 		}
@@ -175,11 +186,9 @@ Matrix *Matrix_fajlbol_olvas(char *fajlnev)
 	}
 	else 
 	{
-		fread(buffer, sizeof(char), 1000, fp);
-		//printf("beolvasott buffer: %s\n", buffer);
+		fread(buffer, sizeof(char), PMATRIX_BUFFER_MERET, fp);
 		replace(buffer, " ", PMATRIX_OSZLOP_ELVALASZTO);
 		replace(buffer, "\n", PMATRIX_SOR_ELVALASZTO);
-		//printf("buffer: %s", buffer);
 		vissza = Matrix_sztringbol_strtok(buffer, sor, oszlop);
 	}
     return vissza;
@@ -190,7 +199,7 @@ void _fejlec_feldolgoz(char *fejlec,
 					  int *oszlop,
 					  Matrix_FAJLFORMATUM *formatum)
 {
-	const char header_elvalaszto[2] = PMATRIX_FEJLEC_ELVALASZTO;
+	const char header_elvalaszto[2] = "_";
 	char *token, *strtok_r_reentr;
 	
 	//a 'pmatrix' jelzőt átugorjuk
@@ -199,7 +208,6 @@ void _fejlec_feldolgoz(char *fejlec,
 	token = strtok_r(NULL, header_elvalaszto, &strtok_r_reentr);
 	//formátumkód
 	token = strtok_r(NULL, header_elvalaszto, &strtok_r_reentr);
-	printf("beolvasott formátumkód: %s\n", token);
 	//alapértelmezetetten soronként ('s' formátumkód);
 	//'e' formátumkódnál egy sorban az egész
 	*formatum = MATRIX_FF_SORONKENT;
@@ -209,7 +217,6 @@ void _fejlec_feldolgoz(char *fejlec,
 	//sorok száma
 	token = strtok_r(NULL, header_elvalaszto, &strtok_r_reentr);
 	*sor = atoi(token);
-	
 	
 	//sorelvalaszto, ha van
 	if (*formatum == MATRIX_FF_EGYSORBAN)
@@ -226,8 +233,6 @@ void _fejlec_feldolgoz(char *fejlec,
 	{
 		token = strtok_r(NULL, header_elvalaszto, &strtok_r_reentr);
 	}
-	printf("%d %d\n", *sor, *oszlop);
-
 }
 #define FORMATUMKOD "s"
 void Matrix_fajlba_ir(Matrix *m, FILE *fp)
@@ -242,32 +247,29 @@ void Matrix_fajlba_ir(Matrix *m, FILE *fp)
 	     egy_oszl: egyedi oszlopelválasztó karakter
 	 * 
 	 */
+	char tizedes_prec[9];
+	char *tizedes_prec_ws = (char *) malloc(sizeof(char)*10);
+	sprintf(tizedes_prec, "%%.%dlf", PMATRIX_TIZEDES_PRECIZIO_FAJLBAIRAS);
+	strcpy(tizedes_prec_ws, tizedes_prec);
+	strcat(tizedes_prec_ws, " ");
 	
-	fprintf(fp, "pmatrix%s%d.%d%s%s%s%d%s%s%d%s%s\n",   PMATRIX_FEJLEC_ELVALASZTO,
-														PMATRIX_VERZIO,
-														PMATRIX_ALVERZIO,
-														PMATRIX_FEJLEC_ELVALASZTO,
-														FORMATUMKOD,
-														PMATRIX_FEJLEC_ELVALASZTO,
-														m->sor,
-														PMATRIX_FEJLEC_ELVALASZTO,
-														PMATRIX_FEJLEC_ELVALASZTO,
-														m->oszlop,
-														PMATRIX_FEJLEC_ELVALASZTO,
-														PMATRIX_FEJLEC_ELVALASZTO);
+	//a fájl fejléce
+	fprintf(fp, "pmatrix_%s_%s_%d_%d_\n", PMATRIX_VERZIO,
+										  FORMATUMKOD,
+										  m->sor,
+										  m->oszlop);
 	for (int i = 0; i < m->sor; ++i)
     {
         for (int j = 0; j < m->oszlop; ++j)
         {
-			if (j < m->oszlop - 1)
-				fprintf(fp, "%.2f ", m->tomb[i][j]);
-			else
-				fprintf(fp, "%.2f", m->tomb[i][j]);
-			
+			//j < m->oszlop - 1: az adott elem az utolsó-e a sorban?
+			//ha nem az, rakunk whitespace-t utána, ha az, akkor nem
+			fprintf(fp, j < m->oszlop - 1 ? tizedes_prec_ws : tizedes_prec, m->tomb[i][j]);
         }
         if (i < m->sor - 1)
 			fprintf(fp, "\n");
     }
+    free(tizedes_prec_ws);
 	fclose(fp);
 }
 

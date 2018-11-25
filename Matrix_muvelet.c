@@ -194,10 +194,10 @@ Matrix* Matrix_Gauss(Matrix *m)
         }
         else
         {
-            a = _van_meg_nemnulla_sor(*m, i);
+            a = _van_meg_nemnulla_sor(*masol, i);
             if (a > 0)
             {
-                Matrix_sorcsere_helyben(m, i, a);
+                Matrix_sorcsere_helyben(masol, i, a);
                 sorszoroz_helyben(masol->tomb[i], masol->oszlop, 1/masol->tomb[i][i]);
             }
             else 
@@ -352,9 +352,9 @@ double Matrix_determinans(Matrix *m)
 
 
 /*!
- *  \brief egy mátrix főátlójának összege, _nyom_
+ *  \brief segédfüggvény determináns-számításhoz, egy mátrix főátlójának szorzata
  *  \param m a mátrix
- * 	\return a főátló összege
+ * 	\return a főátló szorzata
  */
 double _Matrix_det_foatlo_szorzas(Matrix *m)
 {
@@ -412,9 +412,4 @@ void LU_dekomp(Matrix m, Matrix *also, Matrix *masol)
         }
         //printf("2. loop vege\n");
     }
-    
-    
-    //printf("másol:\n");
-    //Matrix_kiir(masol); 
-    //Matrix_memfelszab(masol);
 }

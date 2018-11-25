@@ -9,21 +9,16 @@
 #include "Matrix_muvelet.h"
 #include "debugmalloc.h"
 
-#undef PMATRIX_TIZEDES_PRECIZIO_KIIRAS
-#define PMATRIX_TIZEDES_PRECIZIO_KIIRAS 4
-
 int main()
 {
+	printf("pmatrix %s DEMÓ\n", PMATRIX_VERZIO);
+
     //Matrix k = Matrix_sztringbol("12, 3, 4, 5;1, 8.5, 3, 2;");
     //Matrix a = Matrix_sztringbol("5, 6;4,4;7,-1;8,3;");
     //Matrix gg = Matrix_sztringbol("0,1,2;1,2,1;2,7,8;");
     //Matrix gg = Matrix_sztringbol_strtok("1,1,2,2,1,-1;4,4,8,9,1,-7;2,5,13,1,26,10;1,3,8,2,11,1;2,1,1,2,3,3;");
     //Matrix gg = Matrix_sztringbol_strtok("2,-1,6,12;2,2,3,24;6,-1,17,46;4,-1,13,32;");
-    //Matrix_Gauss(&gg);
-    //Matrix_kiir(gg);
-    //Matrix_Gauss(&gg);
-    //Matrix_kiir(gg);
-    
+
     //Matrix rref_gg = Matrix_sztringbol("1,2,1;0,1,2;0,0,0;");
     //printf("a rref_gg rangja: %d\n", Matrix_rang(rref_gg));
     
@@ -84,19 +79,17 @@ int main()
 	Matrix_memfelszab(C);
 	*/
 	
-	Matrix *D = Matrix_sztringbol_strtok("8,1,6;4,9,2;0,5,7;", 3, 3);
-	//Matrix *D = Matrix_sztringbol_strtok("1,6,5,4,5,6;7,5,3,0,7,3;3,4,5,6,0,1;12,15,1,-1,4,-6;8,8,7,10,12,19;6,5,1,2,4,5;", -1, -1);
-	//Matrix *U = Matrix_masol(D);
-	//Matrix *L = Matrix_egyseg(6);
-	//Matrix_kiir(D);
-	//LU_dekomp(*D, L, U);
-	//Matrix_kiir(U);
-	//Matrix_kiir(L);
+	//Matrix *D = Matrix_sztringbol_strtok("0,2,1;3,4,8;3,0,0;", 3, 3);
+	Matrix *D = Matrix_fajlbol_olvas("TESZT_KI.mtrx");
+	Matrix *D_elim = Matrix_Gauss(D);
+	Matrix_kiir(D_elim);
 	printf("det(D): %lf\n", Matrix_determinans(D));
 	
+	FILE *output = fopen("D_gaussd.mtrx", "w");
+	Matrix_fajlba_ir(D_elim, output);
+
 	Matrix_memfelszab(D);
-	//Matrix_memfelszab(L);
-	//Matrix_memfelszab(U);
+	Matrix_memfelszab(D_elim);
 	
     return 0;
 }
