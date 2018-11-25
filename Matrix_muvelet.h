@@ -27,7 +27,7 @@ Matrix *Matrix_osszead(Matrix m1, Matrix m2);
 
 Matrix *Matrix_szorzas(Matrix jobb, Matrix bal);
 
-void Matrix_transzponal(Matrix *m);
+Matrix *Matrix_transzponal(Matrix *m);
 
 bool _nullasor(double *sor, int meret);
 

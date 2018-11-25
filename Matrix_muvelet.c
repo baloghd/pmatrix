@@ -163,7 +163,7 @@ Matrix *Matrix_szorzas(Matrix jobb, Matrix bal)
     return szorzat;
 }
 
-void Matrix_transzponal(Matrix *m)
+Matrix *Matrix_transzponal(Matrix *m)
 {
 	Matrix *m_T = Matrix_inic(m->sor, m->oszlop);
 	for (int i = 0; i < m->sor; ++i)
@@ -173,11 +173,8 @@ void Matrix_transzponal(Matrix *m)
 			m_T->tomb[j][i] = m->tomb[i][j];
 		}
 	}
-	m = m_T;
-	Matrix_memfelszab(m);
+	return m_T;
 }
-
-
 
 /*!
  *  \brief segédfüggvény a Gauss-eliminációhoz

@@ -39,13 +39,14 @@ int main()
 	
 	printf("most beolvassuk, majd kiírjuk a transzponáltját:\n");
 	Matrix *transzf_A = Matrix_fajlbol_olvas("transzf_A.mtrx");
-	Matrix_transzponal(transzf_A);
-	Matrix_kiir(transzf_A);
+	Matrix *transzf_A_T = Matrix_transzponal(transzf_A);
+	Matrix_kiir(transzf_A_T);
 
 	Matrix_memfelszab(A);
 	Matrix_memfelszab(A_inv);
 	Matrix_memfelszab(szorzat);
 	Matrix_memfelszab(transzf_A);
+	Matrix_memfelszab(transzf_A_T);
 	
     return 0;
 }
