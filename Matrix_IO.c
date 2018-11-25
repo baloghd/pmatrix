@@ -57,7 +57,7 @@ Matrix *Matrix_sztringbol_strtok(const char *Matrix_sztring, int arg_n_sor, int 
     strcpy(m, Matrix_sztring);
     strcpy(mcopy, Matrix_sztring);
    
-    char *sor, *oszlop, *sor_reent_ptr, *oszlop_reent_ptr;
+    char *sor, *oszlop, *sor_reent_ptr, *oszlosp_reent_ptr;
     int n_sor = 0, n_oszlop = 0;
     if (arg_n_sor == -1 || arg_n_oszlop == -1)
     {
