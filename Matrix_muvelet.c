@@ -272,6 +272,7 @@ Matrix* Matrix_Gauss(Matrix *m)
 			}
 		}
 	}
+	_nulla_check(masol);
     return masol;
 }
 /*!
@@ -386,7 +387,7 @@ Matrix *Matrix_balrol_elvesz(Matrix *m)
 	return vissza;
 }
 /*!
- *  \brief egy matrix determinansanak kiszamitasa
+ *  \brief egy matrix determinansanak kiszamitasa LU-dekompozícióval
  *  \param m a vizsgalt matrix
  * 	\return a determinans
  */
@@ -447,7 +448,6 @@ void LU_dekomp(Matrix m, Matrix *also, Matrix *masol)
         for (int t = i + 1; t < masol->sor; ++t)
         {
             double *bontosor = sorszoroz(masol->tomb[i], masol->oszlop, -(masol->tomb[t][i]/masol->tomb[i][i]));
-            //printf("számok: %lf %lf együttható: %lf\n", masol->tomb[t][i], masol->tomb[i][i], masol->tomb[t][i]/masol->tomb[i][i]);
             also->tomb[t][i] = masol->tomb[t][i]/masol->tomb[i][i];
             sorosszead_helyben(masol->tomb[t], bontosor, masol->oszlop);
             free(bontosor);

@@ -41,12 +41,26 @@ int main()
 	Matrix *transzf_A = Matrix_fajlbol_olvas("transzf_A.mtrx");
 	Matrix *transzf_A_T = Matrix_transzponal(transzf_A);
 	Matrix_kiir(transzf_A_T);
+	
+	
+	Matrix *also = Matrix_egyseg(transzf_A->sor);
+	Matrix *felso = Matrix_masol(transzf_A);
+	LU_dekomp(*transzf_A, also, felso);
+	
+	printf("a mátrixnak az LU-dekompozíciója:\n");
+	printf("alsóháromszög-mátrix:\n");
+	Matrix_kiir(also);
+
+	printf("felsőháromszög-mátrix:\n");
+	Matrix_kiir(felso);
 
 	Matrix_memfelszab(A);
 	Matrix_memfelszab(A_inv);
 	Matrix_memfelszab(szorzat);
 	Matrix_memfelszab(transzf_A);
 	Matrix_memfelszab(transzf_A_T);
+	Matrix_memfelszab(also);
+	Matrix_memfelszab(felso);
 	
     return 0;
 }
