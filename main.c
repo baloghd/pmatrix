@@ -84,19 +84,19 @@ int main()
 	Matrix_memfelszab(C);
 	*/
 	
-	//Matrix *D = Matrix_sztringbol_strtok("8,1,6;4,9,2;0,5,7;", -1, -1);
-	Matrix *D = Matrix_sztringbol_strtok("1,6,5,4,5,6;7,5,3,0,7,3;3,4,5,6,0,1;12,15,1,-1,4,-6;8,8,7,10,12,19;6,5,1,2,4,5;", -1, -1);
-	Matrix *U = Matrix_masol(D);
-	Matrix *L = Matrix_egyseg(6);
-	Matrix_kiir(D);
-	LU_dekomp(*D, L, U);
+	Matrix *D = Matrix_sztringbol_strtok("8,1,6;4,9,2;0,5,7;", 3, 3);
+	//Matrix *D = Matrix_sztringbol_strtok("1,6,5,4,5,6;7,5,3,0,7,3;3,4,5,6,0,1;12,15,1,-1,4,-6;8,8,7,10,12,19;6,5,1,2,4,5;", -1, -1);
+	//Matrix *U = Matrix_masol(D);
+	//Matrix *L = Matrix_egyseg(6);
+	//Matrix_kiir(D);
+	//LU_dekomp(*D, L, U);
 	//Matrix_kiir(U);
 	//Matrix_kiir(L);
-	printf("det(D): %lf", _Matrix_det_foatlo_szorzas(U));
+	printf("det(D): %lf\n", Matrix_determinans(D));
 	
 	Matrix_memfelszab(D);
-	Matrix_memfelszab(L);
-	Matrix_memfelszab(U);
+	//Matrix_memfelszab(L);
+	//Matrix_memfelszab(U);
 	
     return 0;
 }

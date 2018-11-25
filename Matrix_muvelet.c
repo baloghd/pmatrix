@@ -333,23 +333,23 @@ Matrix *Matrix_balrol_elvesz(Matrix *m)
 	}
 	return vissza;
 }
-
-/* double Matrix_determinans_2x2(Matrix *m)
+/*!
+ *  \brief egy matrix determinansanak kiszamitasa
+ *  \param m a vizsgalt matrix
+ * 	\return a determinans
+ */
+double Matrix_determinans(Matrix *m)
 {
-	return m->tomb[0][0]*m->tomb[1][1] - m->tomb[0][1]*m->tomb[1][0];
-}
-
-double Matrix_det_rek(Matrix *m)
-{
-	if (m->sor == 2 && m->oszlop == 2)
-		return m->tomb[0][0]*m->tomb[1][1] - m->tomb[0][1]*m->tomb[1][0];
-	
-	else if (m->sor == 3 && m->oszlop == 3)
-	{
-		return m->tomb[0][1]*Matrix_determinans_2x2(*m);
+	assert(m->sor == m->oszlop);
+	Matrix *also = Matrix_egyseg(m->sor);
+	Matrix *felso = Matrix_masol(m);
+	LU_dekomp(*m, also, felso);
+	Matrix_memfelszab(also);
+	double vissza = _Matrix_det_foatlo_szorzas(felso);
+	Matrix_memfelszab(felso);
+	return vissza;
 	}
-}
-*/
+
 
 /*!
  *  \brief egy mátrix főátlójának összege, _nyom_
@@ -358,7 +358,7 @@ double Matrix_det_rek(Matrix *m)
  */
 double _Matrix_det_foatlo_szorzas(Matrix *m)
 {
-    assert(m->sor == m->oszlop);
+    //assert(m->sor == m->oszlop);
     double det = 1;
     for (int i = 0; i < m->sor; ++i)
     {
@@ -366,7 +366,13 @@ double _Matrix_det_foatlo_szorzas(Matrix *m)
     }
     return det;
 }
-
+/*!
+ *  \brief LU-dekompozicio
+ *  \param m a szetszedendo matrix
+ * 	\param also egy egysegmatrixra mutato pointer, ami also
+ *  haromszogmatrix lesz ha lefut a fuggveny
+ *  \param masol egy inicializalt matrixs
+ */
 void LU_dekomp(Matrix m, Matrix *also, Matrix *masol)
 {
 	//Matrix *masol = Matrix_masol(&m);
