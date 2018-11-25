@@ -2,7 +2,9 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <assert.h>
+#include <math.h>
 
+#include "config.h"
 #include "Matrix.h"
 #include "Matrix_IO.h"
 #include "Matrix_muvelet.h"
@@ -160,6 +162,23 @@ Matrix *Matrix_szorzas(Matrix jobb, Matrix bal)
     }
     return szorzat;
 }
+
+void Matrix_transzponal(Matrix *m)
+{
+	Matrix *m_T = Matrix_inic(m->sor, m->oszlop);
+	for (int i = 0; i < m->sor; ++i)
+    {
+        for (int j = 0; j < m->oszlop; ++j)
+        {
+			m_T->tomb[j][i] = m->tomb[i][j];
+		}
+	}
+	m = m_T;
+	Matrix_memfelszab(m);
+}
+
+
+
 /*!
  *  \brief segédfüggvény a Gauss-eliminációhoz
  *  \param m a mátrix
@@ -276,6 +295,18 @@ int Matrix_rang(Matrix *m)
 	return rang;
 }
 /*!
+ *  \brief segédfüggvény double-k összehasonlítására
+ *  \param x egyik szám
+ *  \param y másik szám
+ *  \return _true_: a PMATRIX_EPSILON határon belül vannak, tehát ~egyenlőek \n
+ * _false_: nem egyenlőek
+ */
+bool _double_egyenlo(double x, double y)
+{
+	return fabs(x - y) < PMATRIX_EPSILON;
+}
+
+/*!
  *  \brief egy mátrix inverzét adja vissza
  *  \param m a mátrix
  *  \return a mátrix inverzére mutató pointer
@@ -283,6 +314,8 @@ int Matrix_rang(Matrix *m)
 Matrix *Matrix_inverz(Matrix *m)
 {
 	assert((m->sor == m->oszlop) && "HIBA: csak négyzetes mátrixnak van inverze.");
+	assert(!_double_egyenlo(0.0, Matrix_determinans(m)) && "HIBA: a mátrix szinguláris (determinánsa 0), így nincs inverze");
+	
 	Matrix *osszerak = Matrix_jobbra_hozzaad(m);
 	Matrix *eliminal = Matrix_Gauss(osszerak);
 	Matrix *inverz = Matrix_balrol_elvesz(eliminal);

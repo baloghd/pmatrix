@@ -13,73 +13,39 @@ int main()
 {
 	printf("pmatrix %s DEMÓ\n", PMATRIX_VERZIO);
 
-    //Matrix k = Matrix_sztringbol("12, 3, 4, 5;1, 8.5, 3, 2;");
-    //Matrix a = Matrix_sztringbol("5, 6;4,4;7,-1;8,3;");
-    //Matrix gg = Matrix_sztringbol("0,1,2;1,2,1;2,7,8;");
-    //Matrix gg = Matrix_sztringbol_strtok("1,1,2,2,1,-1;4,4,8,9,1,-7;2,5,13,1,26,10;1,3,8,2,11,1;2,1,1,2,3,3;");
-    //Matrix gg = Matrix_sztringbol_strtok("2,-1,6,12;2,2,3,24;6,-1,17,46;4,-1,13,32;");
-
-    //Matrix rref_gg = Matrix_sztringbol("1,2,1;0,1,2;0,0,0;");
-    //printf("a rref_gg rangja: %d\n", Matrix_rang(rref_gg));
-    
-    //Matrix *gg = Matrix_fajlbol_olvas("TESZTMATRIX.mtrx");
-    /* Matrix *gg = Matrix_sztringbol_strtok("2,-1,6,12;2,2,3,24;6,-1,17,46;4,-1,13,32;", -1, -1);
-    Matrix_kiir(gg);
-
-    FILE *output = fopen("TESZT_KI.mtrx", "w");
-    Matrix_fajlba_ir(gg, output);
-    Matrix_memfelszab(gg);
-    
-    Matrix *ff = Matrix_fajlbol_olvas("TESZT_KI.mtrx");
-    Matrix *masolat = Matrix_masol(ff);
-    Matrix_kiir(masolat);
-    
-    Matrix_Gauss(masolat);
-    
-    Matrix_memfelszab(masolat);
-    Matrix_memfelszab(ff);
-    */
-    //Matrix *A = Matrix_sztringbol_strtok("1,2,3;0,3,4;2,2,2;", -1, -1);
-    /*
-    Matrix *A = Matrix_sztringbol_strtok("2,4,5,6;4,2,7,1;8,7,0,3;", -1, -1);
-    Matrix *redukalt_A = Matrix_Gauss(A);
-    
-    FILE *output = fopen("TESZT_REDUKALT_KI.mtrx", "w");
-    Matrix_fajlba_ir(redukalt_A, output);
-    
-    printf("A matrix: \n");
-    Matrix_kiir(A);
-    printf("A matrix redukált lépcsős alakja:\n");
-    Matrix_kiir(redukalt_A);
-    printf("az A matrix rangja: %d\n\n", Matrix_rang(A));
-    
-    Matrix *B = Matrix_sztringbol_strtok("4,5,10,12;6,7,8,-5;3,4,8,18;5,6,7,1;", -1, -1);
-    Matrix *B_inverz = Matrix_inverz(B);
-    Matrix_kiir(B_inverz);
-
-    Matrix_memfelszab(B);
-    Matrix_memfelszab(B_inverz);
-    
-    Matrix_memfelszab(A);
-    Matrix_memfelszab(redukalt_A);
-    
-    Matrix *C = Matrix_sztringbol_strtok("3,4;6,3;", 2, 2);
-    Matrix_kiir(C);
-    //printf("C determinánsa: %lf\n", Matrix_determinans_2x2(C));
-    
-	Matrix_memfelszab(C);
-	*/
+	//Matrix *A = Matrix_fajlbol_olvas("TESZT_KI.mtrx");
+	Matrix *A = Matrix_sztringbol("4,5,10,12;6,7,8,-5;3,4,8,18;5,6,7,1;", -1, -1);	
+	printf("mátrix A:\n");
+	Matrix_kiir(A);
 	
-	//Matrix *D = Matrix_sztringbol_strtok("0,2,1;3,4,8;3,0,0;", 3, 3);
-	Matrix *D = Matrix_fajlbol_olvas("TESZT_KI.mtrx");
-	Matrix *D_elim = Matrix_Gauss(D);
-	Matrix_kiir(D_elim);
-	printf("det(D): %lf\n", Matrix_determinans(D));
+	printf("det(A): %.4lf\n", Matrix_determinans(A));
+	printf("rang(A): %d\n", Matrix_rang(A));
+	printf("nyom(A): %.4lf\n\n", Matrix_nyom(A));
+	Matrix *A_inv = Matrix_inverz(A);
+	printf("A_inverz: \n");
+	Matrix_kiir(A_inv);
 	
-	Matrix_fajlba_ir(D_elim, "D_gauss_uj", "csv", "s");
+	printf("A * A_inverz = E:\n");
+	Matrix *szorzat = Matrix_szorzas(*A, *A_inv);
+	Matrix_kiir(szorzat);
+	
+	printf("A első és harmadik sora, majd második és negyedik oszlopa megcserélve:\n");
+	Matrix_sorcsere_helyben(A, 0, 2);
+	Matrix_oszlopcsere_helyben(A, 1, 3);
+	Matrix_kiir(A);
+	
+	printf("ezt a transzformált mátrixot kíírjuk fájlba, transzf_A.mtrx néven\n");
+	Matrix_fajlba_ir(A, "transzf_A", "mtrx", "s");
+	
+	printf("most beolvassuk, majd kiírjuk a transzponáltját:\n");
+	Matrix *transzf_A = Matrix_fajlbol_olvas("transzf_A.mtrx");
+	Matrix_transzponal(transzf_A);
+	Matrix_kiir(transzf_A);
 
-	Matrix_memfelszab(D);
-	Matrix_memfelszab(D_elim);
+	Matrix_memfelszab(A);
+	Matrix_memfelszab(A_inv);
+	Matrix_memfelszab(szorzat);
+	Matrix_memfelszab(transzf_A);
 	
     return 0;
 }

@@ -27,9 +27,13 @@ Matrix *Matrix_osszead(Matrix m1, Matrix m2);
 
 Matrix *Matrix_szorzas(Matrix jobb, Matrix bal);
 
+void Matrix_transzponal(Matrix *m);
+
 bool _nullasor(double *sor, int meret);
 
 int Matrix_rang(Matrix *m);
+
+bool _double_egyenlo(double x, double y);
 
 Matrix *Matrix_inverz(Matrix *m);
 
@@ -38,8 +42,6 @@ Matrix *Matrix_jobbra_hozzaad(Matrix *m);
 Matrix *Matrix_balrol_elvesz(Matrix *m);
 
 double Matrix_determinans(Matrix *m);
-
-//double Matrix_determinans_2x2(Matrix *m);
 
 double _Matrix_det_foatlo_szorzas(Matrix *m);
 

@@ -21,7 +21,7 @@ void Matrix_kiir(Matrix *m);
 
 void Matrix_kiir_Octave(Matrix *m);
 
-Matrix *Matrix_sztringbol_strtok(const char *sz, int n_sor, int n_oszlop);
+Matrix *Matrix_sztringbol(const char *sz, int n_sor, int n_oszlop);
 
 Matrix *Matrix_fajlbol_olvas(char *fajlnev);
 

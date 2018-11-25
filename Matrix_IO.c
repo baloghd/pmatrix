@@ -58,7 +58,7 @@ void Matrix_kiir_Octave(Matrix *m)
  *  \param arg_n_oszlop ha tudjuk a mátrix oszlopainak számát \n ha nem, -1
  * 	\return a beolvasott mátrix struktúra
  */
-Matrix *Matrix_sztringbol_strtok(const char *Matrix_sztring, int arg_n_sor, int arg_n_oszlop)
+Matrix *Matrix_sztringbol(const char *Matrix_sztring, int arg_n_sor, int arg_n_oszlop)
 {
     char elval[2] = PMATRIX_OSZLOP_ELVALASZTO;
     char sorelval[2] = PMATRIX_SOR_ELVALASZTO;
@@ -176,7 +176,7 @@ Matrix *Matrix_fajlbol_olvas(char *fajlnev)
 			if ((iter = strchr(buffer, '\n')) != NULL)
 				*iter = '\0';
 				
-			vissza = Matrix_sztringbol_strtok(buffer, sor, oszlop);
+			vissza = Matrix_sztringbol(buffer, sor, oszlop);
 		}
 	}
 	else 
@@ -184,7 +184,7 @@ Matrix *Matrix_fajlbol_olvas(char *fajlnev)
 		fread(buffer, sizeof(char), PMATRIX_BUFFER_MERET, fp);
 		_sztring_csere(buffer, " ", PMATRIX_OSZLOP_ELVALASZTO);
 		_sztring_csere(buffer, "\n", PMATRIX_SOR_ELVALASZTO);
-		vissza = Matrix_sztringbol_strtok(buffer, sor, oszlop);
+		vissza = Matrix_sztringbol(buffer, sor, oszlop);
 	}
     return vissza;
 }
@@ -258,21 +258,24 @@ void Matrix_fajlba_ir(Matrix *m, char *fajlnev, char *fajlformatum, char *format
 	sprintf(nev_es_formatum, "%s.%s", fajlnev, fajlformatum);
 	FILE *fp = fopen(nev_es_formatum, "w");
 	free(nev_es_formatum);
+	
 	char tizedes_prec[9];
 	char *tizedes_prec_ws = (char *) malloc(sizeof(char)*10);
 	sprintf(tizedes_prec, "%%.%dlf", PMATRIX_TIZEDES_PRECIZIO_FAJLBAIRAS);
 	strcpy(tizedes_prec_ws, tizedes_prec);
-	strcat(tizedes_prec_ws, " ");
+	strcat(tizedes_prec_ws, PMATRIX_OSZLOP_ELVALASZTO);
 	
 	if (strcmp(fajlformatum, "mtrx") == 0)
 	{
 		//a fájl fejléce
 		if (strcmp(formatumkod, "e") == 0)
 		{
-			fprintf(fp, "pmatrix_%s_%s_%d__%d__\n",   PMATRIX_VERZIO,
+			fprintf(fp, "pmatrix_%s_%s_%d_%s_%d_%s_\n",   PMATRIX_VERZIO,
 													  formatumkod,
 													  m->sor,
-													  m->oszlop);
+													  PMATRIX_SOR_ELVALASZTO,
+													  m->oszlop,
+													  PMATRIX_OSZLOP_ELVALASZTO);
 		}
 		else 
 		{
@@ -285,7 +288,7 @@ void Matrix_fajlba_ir(Matrix *m, char *fajlnev, char *fajlformatum, char *format
 	}
 	else if (strcmp(fajlformatum, "csv") == 0)
 	{
-		//placeholder, üres
+		//placeholder
 	}
 	else
 	{

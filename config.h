@@ -8,10 +8,12 @@
 
 #define PMATRIX_VERZIO PMATRIX_VERZIOSZAM "." PMATRIX_ALVERZIOSZAM
 
+/*! általános tizedes precízió */
+#define PMATRIX_EPSILON 0.00000001
 /*! tizedes precízió a standard kimenetre való írásnál */
 #define PMATRIX_TIZEDES_PRECIZIO_KIIRAS 3
 /*! tizedes precízió fájlba való írásnál */
-#define PMATRIX_TIZEDES_PRECIZIO_FAJLBAIRAS 2
+#define PMATRIX_TIZEDES_PRECIZIO_FAJLBAIRAS 3
 
 //IO
 /*! sorelválasztó karakter, alapértelmezésben ";" */
