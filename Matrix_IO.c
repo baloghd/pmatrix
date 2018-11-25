@@ -147,8 +147,7 @@ Matrix *Matrix_fajlbol_olvas(char *fajlnev)
     
     int sor = 0, oszlop = 0;
     Matrix_FAJLFORMATUM formatum;
-    
-    while (fgets(buffer, PMATRIX_BUFFER_MERET, fp))
+    while (fgets(buffer, PMATRIX_BUFFER_MERET, fp) )
     {
 		if(strstr(buffer, "pmatrix"))
 		{
@@ -183,7 +182,6 @@ Matrix *Matrix_fajlbol_olvas(char *fajlnev)
 		//printf("buffer: %s", buffer);
 		vissza = Matrix_sztringbol_strtok(buffer, sor, oszlop);
 	}
-   
     return vissza;
 }
 
