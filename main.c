@@ -7,13 +7,21 @@
 #include "Matrix.h"
 #include "Matrix_IO.h"
 #include "Matrix_muvelet.h"
-#include "debugmalloc.h"
+//#include "debugmalloc.h"
+
+void demo_sokcsillag()
+{
+	for (int i = 0; i < 50; ++i)
+		printf("*");
+	printf("\n");
+}
 
 int main()
 {
-	printf("pmatrix %s DEMÓ\n", PMATRIX_VERZIO);
-
-	//Matrix *A = Matrix_fajlbol_olvas("TESZT_KI.mtrx");
+	demo_sokcsillag();
+	printf("		pmatrix %s DEMÓ\n", PMATRIX_VERZIO);
+	demo_sokcsillag();
+	
 	Matrix *A = Matrix_sztringbol("4,5,10,12;6,7,8,-5;3,4,8,18;5,6,7,1;", -1, -1);	
 	printf("mátrix A:\n");
 	Matrix_kiir(A);
@@ -42,7 +50,6 @@ int main()
 	Matrix *transzf_A_T = Matrix_transzponal(transzf_A);
 	Matrix_kiir(transzf_A_T);
 	
-	
 	Matrix *also = Matrix_egyseg(transzf_A->sor);
 	Matrix *felso = Matrix_masol(transzf_A);
 	LU_dekomp(*transzf_A, also, felso);
@@ -53,7 +60,18 @@ int main()
 
 	printf("felsőháromszög-mátrix:\n");
 	Matrix_kiir(felso);
-
+	
+	printf("most kiírjuk a felsőháromszög-mátrixot egy fájlba, egysoros mtrx formátumban\n");
+	Matrix_fajlba_ir(felso, "transzf_A_felso", "mtrx", "e");
+	
+	printf("most visszaolvassuk ugyanezt:\n");
+	Matrix *egysor_beolvas = Matrix_fajlbol_olvas("transzf_A_felso.mtrx");
+	Matrix_kiir(egysor_beolvas);
+	
+	printf("adjuk össze az alsó- és felsőháromszögmátrixokat: \n");
+	Matrix *osszeg = Matrix_osszead(*also, *felso);
+	Matrix_kiir(osszeg);
+	
 	Matrix_memfelszab(A);
 	Matrix_memfelszab(A_inv);
 	Matrix_memfelszab(szorzat);
@@ -61,6 +79,8 @@ int main()
 	Matrix_memfelszab(transzf_A_T);
 	Matrix_memfelszab(also);
 	Matrix_memfelszab(felso);
+	Matrix_memfelszab(egysor_beolvas);
+	Matrix_memfelszab(osszeg);
 	
     return 0;
 }

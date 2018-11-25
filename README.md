@@ -17,6 +17,7 @@ A modularitást szem előtt tartva pmatrix több fejlécből épül fel. Ezek:
   - Gauss-elimináció
   - rang
   - megfelelő méretű mátrixoknál determináns számítása
+- *config.h*: beállításokat tároló fejléc (tizedes-precízió, elválasztók)
   
 
 

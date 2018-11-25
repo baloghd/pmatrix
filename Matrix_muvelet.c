@@ -8,7 +8,7 @@
 #include "Matrix.h"
 #include "Matrix_IO.h"
 #include "Matrix_muvelet.h"
-#include "debugmalloc.h"
+//#include "debugmalloc.h"
 
 /*! \file */ 
 
@@ -218,7 +218,6 @@ int _van_meg_nemnulla_sor(Matrix m, int kezdosor)
  *  \brief Gauss-elimináció implementáció
  *  \param m a mátrix
  *  \return az eliminált mátrix
- * TODO: lépcsős / redukált lépcsős alak választás
  */
 Matrix* Matrix_Gauss(Matrix *m)
 {
@@ -422,7 +421,7 @@ double _Matrix_det_foatlo_szorzas(Matrix *m)
  *  \param m a szetszedendo matrix
  * 	\param also egy egysegmatrixra mutato pointer, ami also
  *  haromszogmatrix lesz ha lefut a fuggveny
- *  \param masol egy inicializalt matrix
+ *  \param masol a szétszedendő mátrix másolata
  */
 void LU_dekomp(Matrix m, Matrix *also, Matrix *masol)
 {

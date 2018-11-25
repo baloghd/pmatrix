@@ -7,7 +7,7 @@
 #include "config.h"
 #include "Matrix.h"
 #include "Matrix_IO.h"
-#include "debugmalloc.h"
+//#include "debugmalloc.h"
 
 /*! \file */ 
 
@@ -271,11 +271,11 @@ void Matrix_fajlba_ir(Matrix *m, char *fajlnev, char *fajlformatum, char *format
 		if (strcmp(formatumkod, "e") == 0)
 		{
 			fprintf(fp, "pmatrix_%s_%s_%d_%s_%d_%s_\n",   PMATRIX_VERZIO,
-													  formatumkod,
-													  m->sor,
-													  PMATRIX_SOR_ELVALASZTO,
-													  m->oszlop,
-													  PMATRIX_OSZLOP_ELVALASZTO);
+														  formatumkod,
+														  m->sor,
+														  PMATRIX_SOR_ELVALASZTO,
+														  m->oszlop,
+														  PMATRIX_OSZLOP_ELVALASZTO);
 		}
 		else 
 		{
@@ -297,15 +297,16 @@ void Matrix_fajlba_ir(Matrix *m, char *fajlnev, char *fajlformatum, char *format
 		fclose(fp);
 		return;
 	}
+	
 	for (int i = 0; i < m->sor; ++i)
     {
         for (int j = 0; j < m->oszlop; ++j)
         {
 			//j < m->oszlop - 1: az adott elem az utolsó-e a sorban?
-			//ha nem az, rakunk whitespace-t utána, ha az, akkor nem
+			//ha nem az, rakunk elválasztót utána, ha az, akkor nem
 			fprintf(fp, j < m->oszlop - 1 ? tizedes_prec_ws : tizedes_prec, m->tomb[i][j]);
         }
-		fprintf(fp, "\n");
+		fprintf(fp, strcmp(formatumkod, "e") == 0 ? PMATRIX_SOR_ELVALASZTO : "\n");
     }
     free(tizedes_prec_ws);
 	fclose(fp);
